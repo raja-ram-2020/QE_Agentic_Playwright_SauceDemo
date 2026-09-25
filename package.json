@@ -1,0 +1,26 @@
+{
+  "name": "agentic-playwright-scaffold",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report",
+    "allure:serve": "allure serve allure-results"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/cli": "^0.1.21",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^22.0.0",
+    "allure-commandline": "^2.46.1",
+    "allure-playwright": "^3.12.2",
+    "dotenv": "^16.4.5",
+    "reporting-labs": "^0.6.0",
+    "typescript": "^5.5.4"
+  }
+}
