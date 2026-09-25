@@ -116,7 +116,7 @@ jobs:
         run: echo "Deployed to QA"
 
   regression-qa:
-    name: QA - Regression Tests
+    name: QA - Full Test Suite
     needs: deploy-qa
     runs-on: ubuntu-latest
     environment: qa
@@ -148,8 +148,8 @@ jobs:
         if: steps.pw-cache-qa.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
-      - name: Run regression tests on QA
-        run: npx playwright test --project=chromium --grep @regression
+      - name: Run full test suite on QA
+        run: npx playwright test --project=chromium
         env:
           ENVIRONMENT: qa
           APP_URL: ${{ secrets.APP_URL }}
