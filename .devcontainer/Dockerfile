@@ -1,5 +1,5 @@
 # ============================================================
-# PW Scaffold Dev Container
+# PW Framework Dev Container
 # Base: Playwright with pre-installed browsers (Ubuntu Noble)
 # Adds: Python 3, Claude Code CLI, pre-warmed npm & CLI caches
 # ============================================================

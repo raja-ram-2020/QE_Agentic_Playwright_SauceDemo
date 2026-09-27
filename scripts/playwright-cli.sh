@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run @playwright/cli with its own browser cache so we do not clobber
 # PLAYWRIGHT_BROWSERS_PATH=/ms-playwright (used by @playwright/test in the dev container).
-# @playwright/cli depends on a different Playwright version than the scaffold.
+# @playwright/cli depends on a different Playwright version than the framework.
 set -euo pipefail
 
 SCRIPT_PATH="${BASH_SOURCE[0]}"

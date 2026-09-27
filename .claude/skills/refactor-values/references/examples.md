@@ -43,7 +43,7 @@ export enum Messages {
 
 - Search for the old string `'Invalid email or password'` — any test hardcoding it will now fail.
 - Tests using `getByText(Messages.LOGIN_ERROR)` or `toHaveText(Messages.LOGIN_ERROR)` update automatically.
-- Check `test-data/static/*.ts` files for the old string as an expected value field (unlikely but possible if the scaffold mirrors UI text in test cases).
+- Check `test-data/static/*.ts` files for the old string as an expected value field (unlikely but possible if the framework mirrors UI text in test cases).
 - Verify the new text by running `playwright-cli` and comparing against the live app — see the `enums` skill (Phase 4).
 
 ## Example 3: Enum key renamed

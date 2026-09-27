@@ -1,6 +1,6 @@
 ---
 name: debugging
-description: Playwright test debugging conventions for the scaffold — reading failure messages, classifying failure modes (TimeoutError, strict-mode violation, locator not found, network errors), the playwright.config.ts capture defaults (trace on-first-retry, screenshot only-on-failure, video retain-on-failure), the right tool per failure (UI Mode / Trace Viewer / Inspector / headed), the npm-script entry points (test:ui, test:debug, test:headed, report), reproducing locally, fixing without suppressing, and pulling CI artifacts to replay a CI-only failure locally. Use whenever a Playwright test fails or behaves unexpectedly, when triaging a flaky test, when a CI run is red but local is green, or when an action / assertion / navigation times out.
+description: Playwright test debugging conventions for the framework — reading failure messages, classifying failure modes (TimeoutError, strict-mode violation, locator not found, network errors), the playwright.config.ts capture defaults (trace on-first-retry, screenshot only-on-failure, video retain-on-failure), the right tool per failure (UI Mode / Trace Viewer / Inspector / headed), the npm-script entry points (test:ui, test:debug, test:headed, report), reproducing locally, fixing without suppressing, and pulling CI artifacts to replay a CI-only failure locally. Use whenever a Playwright test fails or behaves unexpectedly, when triaging a flaky test, when a CI run is red but local is green, or when an action / assertion / navigation times out.
 ---
 
 # Debugging
@@ -13,15 +13,15 @@ When a test fails, you investigate first and fix second. This skill is the canon
 - **NEVER suppress a failure.** Don't add `test.skip` without `// FIXME: <ticket-url>`, don't loosen an assertion, don't bump timeouts to make a flake pass, don't `try/catch` an `expect` to swallow it.
 - **NEVER add `page.waitForTimeout(...)` to "fix" a timing issue.** Hard waits hide the real cause. Use a web-first assertion (`await expect(locator).toBeVisible()`) or `page.waitForResponse(...)` instead.
 - **NEVER push a fix you can't reproduce locally.** Pull the CI trace and replay it before believing the issue is resolved.
-- **`trace` is opt-in for retries.** This scaffold's `playwright.config.ts` sets `trace: 'on-first-retry'`. Locally `retries: 0`, so traces are **NOT** captured by default. To get a trace locally, either run with `--trace on` (or `--trace retain-on-failure`) or use UI Mode (`npm run test:ui`).
+- **`trace` is opt-in for retries.** This framework's `playwright.config.ts` sets `trace: 'on-first-retry'`. Locally `retries: 0`, so traces are **NOT** captured by default. To get a trace locally, either run with `--trace on` (or `--trace retain-on-failure`) or use UI Mode (`npm run test:ui`).
 - **Prefer UI Mode (`npm run test:ui`) for interactive debugging.** It's the fastest feedback loop — every test step is replayable, locators are live-pickable, the DOM at each step is inspectable. Reach for it before the Inspector or `console.log`.
 - **Re-run multiple times before declaring a flake fixed.** A passing run after one fix is not enough; aim for at least 5 consecutive green runs of the affected test before closing the issue.
 - **Keep `forbidOnly: !!process.env.CI` in mind.** `test.only(...)` is your friend locally for narrowing — but **do not commit it**. CI will fail the build.
 - **Re-run lint and the full affected file after each fix** — `npx eslint .` and `npx playwright test <file>` before moving on.
 
-## Capture Defaults (this scaffold)
+## Capture Defaults (this framework)
 
-What the scaffold automatically captures and where it lives. From `playwright.config.ts`:
+What the framework automatically captures and where it lives. From `playwright.config.ts`:
 
 | Artifact    | Default                                 | Where it ends up                                        |
 | ----------- | --------------------------------------- | ------------------------------------------------------- |
@@ -234,7 +234,7 @@ When the test passes locally but fails in CI, you need CI's artifacts to reprodu
 
 4. **Compare environments.**
     - Different env file? CI usually has its own `env/.env.ci` or relies on shell env.
-    - Different starting state? This scaffold has no persisted storage state — confirm `resetStorageState()` ran in `beforeEach` the same way in both environments.
+    - Different starting state? This framework has no persisted storage state — confirm `resetStorageState()` ran in `beforeEach` the same way in both environments.
     - Different viewport / device? `playwright.config.ts` `chromium` project uses `1920x1080`; if your local default differs, layout-sensitive locators may behave differently.
     - Different browser version? CI installs whatever the Docker image / `@playwright/test` version brings.
 5. **Replay the same conditions locally.**
@@ -249,7 +249,7 @@ When the test passes locally but fails in CI, you need CI's artifacts to reprodu
 - **`selectors`** skill — locator priority, scoping for strict-mode violations, exploration-first workflow when a locator no longer matches.
 - **`page-objects`** skill — where action methods live; `page.waitForResponse(...)` belongs there, not in the spec.
 - **`fixtures`** skill — fixture lifecycle, registration; "fixture is undefined" errors live here.
-- **`helpers`** skill — how this scaffold actually handles auth (`resetStorageState` + per-test login, no persisted session).
+- **`helpers`** skill — how this framework actually handles auth (`resetStorageState` + per-test login, no persisted session).
 - **`test-standards`** skill — single-tag rule, destructive cleanup, test independence (Phase 9) — the source of most "passes alone, fails in suite" issues.
 - **`type-safety`** skill — no-`any` and explicit-return-type enforcement.
 - **`config`** skill — env file selection (`ENVIRONMENT`), `process.env.*` correctness, where `APP_URL` is sourced.

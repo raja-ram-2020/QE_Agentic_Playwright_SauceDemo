@@ -1,6 +1,6 @@
 # Troubleshooting — Common Agent Failure Modes
 
-## The agent generated something that doesn't follow the scaffold's conventions
+## The agent generated something that doesn't follow the framework's conventions
 
 **Cause:** The relevant specialized skill wasn't loaded — the agent worked from generic Playwright knowledge.
 **Fix:** Name the skill explicitly in the prompt ("use the `page-objects` skill"). The skill will load and the Critical block will catch what was missed.

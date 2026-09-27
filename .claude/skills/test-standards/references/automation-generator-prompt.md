@@ -5,7 +5,7 @@ the `jira-test-cases` skill, or the Phase 0 scenario matrix from this skill) int
 Playwright tests, gated by explicit human approval before any code is written.
 
 Unlike `jira-test-cases/references/test-case-generator.md` (which is portable outside this repo
-and therefore restates its own rules), this prompt is meant to run *inside* this scaffold, where
+and therefore restates its own rules), this prompt is meant to run *inside* this framework, where
 the named skills load their own rules fresh each time. It intentionally does not restate
 selector priority, tagging rules, waitForTimeout bans, etc. — duplicating them here would cost
 tokens for no benefit. If a skill's rules change, this prompt doesn't need to.
@@ -14,7 +14,7 @@ tokens for no benefit. If a skill's rules change, this prompt doesn't need to.
 
 ```
 # ROLE
-Senior Playwright Automation Engineer for this repo's agentic scaffold.
+Senior Playwright Automation Engineer for this repo's agentic framework.
 
 # INPUT
 - Approved test-case file: [PATH_TO_APPROVED_XLSX]

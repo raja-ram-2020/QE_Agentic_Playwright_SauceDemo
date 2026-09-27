@@ -1,6 +1,6 @@
 ---
 name: common-tasks
-description: Copy-paste AI prompt templates for common Playwright scaffold development tasks — adding page objects, functional/E2E tests, factories, fixtures, and components. Use when the user asks "how do I add a ...", "give me a prompt for ...", "create a new [page object | test | factory | fixture | component]", or when bootstrapping a new scaffold artifact and wanting a standardized starting prompt. This skill is a routing layer; for the deep rules of each task category load the matching skill directly — page-objects / selectors / playwright-cli for UI locators, fixtures / helpers for fixtures, data-strategy for factories and static data, test-standards for test structure and tags, type-safety for TypeScript, enums for route/message enums.
+description: Copy-paste AI prompt templates for common Playwright framework development tasks — adding page objects, functional/E2E tests, factories, fixtures, and components. Use when the user asks "how do I add a ...", "give me a prompt for ...", "create a new [page object | test | factory | fixture | component]", or when bootstrapping a new framework artifact and wanting a standardized starting prompt. This skill is a routing layer; for the deep rules of each task category load the matching skill directly — page-objects / selectors / playwright-cli for UI locators, fixtures / helpers for fixtures, data-strategy for factories and static data, test-standards for test structure and tags, type-safety for TypeScript, enums for route/message enums.
 ---
 
 # AI Prompt Templates for Agentic Playwright
@@ -14,7 +14,7 @@ For the 8-phase workflow see `ai-native-workflow/SKILL.md`. For worked examples 
 These rules are unique to template usage. **All other rules** (selectors, waits, types, tags, fixtures, JSDoc, no-XPath, no-hardcoded-strings, etc.) live in the **`CLAUDE.md` Constitution** and the **leaf skills** (`page-objects`, `selectors`, `test-standards`, `data-strategy`, `type-safety`, `fixtures`, `enums`). Re-read the Constitution + the matching leaf skill's Critical block **before** generating from any template here.
 
 - **Resolve `{area}` first.** Every template contains `{area}` as a placeholder. Run the matching `ls` (`ls pages/`, `ls tests/`, `ls test-data/factories/`, `ls test-data/static/`, `ls enums/`) and substitute the real folder name **before** filling the template. Do not guess.
-- **Templates are starters, not substitutes.** Each template is a 10-15 line scaffold. The leaf skill listed for the category owns the deep rules — load it and follow it end-to-end. Never reimplement a leaf skill's rules inline in your prompt.
+- **Templates are starters, not substitutes.** Each template is a 10-15 line framework. The leaf skill listed for the category owns the deep rules — load it and follow it end-to-end. Never reimplement a leaf skill's rules inline in your prompt.
 - **Walk the verification checklist** (below) after generating. It is the canonical post-codegen audit; the leaf skills point here for it.
 
 ## Instructions

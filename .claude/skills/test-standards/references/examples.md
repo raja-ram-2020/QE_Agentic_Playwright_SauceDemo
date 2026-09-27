@@ -1,6 +1,6 @@
 # Test Standards — Worked Examples
 
-Four end-to-end spec patterns, one per test type the scaffold supports. Phase numbers refer to `test-standards/SKILL.md`.
+Four end-to-end spec patterns, one per test type the framework supports. Phase numbers refer to `test-standards/SKILL.md`.
 
 ## Example 1: Functional smoke test
 

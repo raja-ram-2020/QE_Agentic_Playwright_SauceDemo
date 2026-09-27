@@ -1,6 +1,6 @@
 ---
 name: type-safety
-description: TypeScript type safety conventions for the Playwright scaffold — the "no any" rule, banning unsafe `as T` casts, explicit return types on exported functions, and the two sanctioned patterns for process.env.* (non-null assertion ! vs ?? fallback). Use when writing type annotations on function signatures, reviewing code for any / unsafe casts, or deciding between ! and ?? on a process.env.* access. For env-variable definitions (where APP_URL etc. are declared) see the config skill.
+description: TypeScript type safety conventions for the Playwright framework — the "no any" rule, banning unsafe `as T` casts, explicit return types on exported functions, and the two sanctioned patterns for process.env.* (non-null assertion ! vs ?? fallback). Use when writing type annotations on function signatures, reviewing code for any / unsafe casts, or deciding between ! and ?? on a process.env.* access. For env-variable definitions (where APP_URL etc. are declared) see the config skill.
 ---
 
 # Type Safety

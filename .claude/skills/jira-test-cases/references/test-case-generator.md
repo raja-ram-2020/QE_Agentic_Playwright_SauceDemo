@@ -5,7 +5,7 @@ criteria into a reviewable test-case matrix. Built on standard prompt-engineerin
 (role, context, explicit process, output contract, constraints, worked example, self-check).
 
 Use this when you need the raw prompt text itself — e.g. pasting into another AI tool, a
-teammate's session, or documentation. Inside this scaffold, the `jira-test-cases` skill
+teammate's session, or documentation. Inside this framework, the `jira-test-cases` skill
 (`../SKILL.md`) already automates this exact workflow end-to-end (Jira MCP fetch → same 6-column
 schema → same Positive/Negative/Edge/Boundary/Performance taxonomy → `.xlsx` output), so prefer
 invoking that skill directly rather than manually running this prompt when working in this repo.
