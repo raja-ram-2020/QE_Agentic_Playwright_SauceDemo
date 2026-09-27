@@ -1,7 +1,6 @@
 ---
 name: selectors
 description: Selector strategy, exploration-first workflow, locator priority order (getByRole then getByLabel then getByPlaceholder then getByText then getByTestId), and feedback/validation-message selector rules for Playwright page objects. Use when creating page objects, writing or updating locators, generating UI tests, or deciding which selector strategy to use for a given element. Enforces mandatory live-app exploration via playwright-cli before any selector generation. For the page-object class structure, JSDoc rules, and fixture registration see the page-objects skill; for the exploration tool itself see the playwright-cli skill; for UI message strings used inside getByText see the enums skill.
-author: Ivan Davidov
 ---
 
 # Selector Strategy
@@ -159,7 +158,7 @@ If a page object covers a form or CRUD operation but has no selectors for succes
 
 - **`page-objects`** skill — POM class structure (constructor, three locator sections, action methods), JSDoc rules, fixture registration, component composition.
 - **`playwright-cli`** skill — the terminal-only live-app exploration tool used in Phase 1 and Phase 2.
-- **`enums`** skill — where `Messages.*`, `ApiEndpoints.*`, and other app-defined strings live; live-text verification workflow.
+- **`enums`** skill — where `Messages.*`, `Routes.*`, and other app-defined strings live; live-text verification workflow.
 - **`common-tasks`** skill — prompt templates for "Add a New Page Object (With / Without Exploration)" that chain into this skill.
 - **`debugging`** skill — strict-mode violations (locator matched multiple), "element not found" / "not attached", and other locator-driven test failures.
 - **`references/examples.md`** — three worked examples (new login page, adding feedback selectors, getByRole vs getByLabel decision).

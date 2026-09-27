@@ -1,5 +1,6 @@
 import { expect, test } from '../../../fixtures/pom/test-options';
 import { Messages } from '../../../enums/swaglabs/swaglabs';
+import { loginAsStandardUser } from '../../../helpers/swaglabs/auth';
 
 test.describe('Navigate menu items', () => {
     test.beforeEach(async ({ resetStorageState, loginPage }) => {
@@ -12,7 +13,7 @@ test.describe('Navigate menu items', () => {
         { tag: '@sanity' },
         async ({ loginPage, inventoryPage }) => {
             await test.step('GIVEN the user is logged in on an authenticated page', async () => {
-                await loginPage.login(process.env.APP_USERNAME!, process.env.APP_PASSWORD!);
+                await loginAsStandardUser(loginPage);
                 await expect(inventoryPage.pageTitle).toBeVisible();
             });
 
@@ -42,7 +43,7 @@ test.describe('Navigate menu items', () => {
         { tag: '@regression' },
         async ({ loginPage, inventoryPage, cartPage, page }) => {
             await test.step('GIVEN the user is logged in, has added 1 item to the cart, and is on the Cart page', async () => {
-                await loginPage.login(process.env.APP_USERNAME!, process.env.APP_PASSWORD!);
+                await loginAsStandardUser(loginPage);
                 await inventoryPage.addToCartButtons.first().click();
                 await expect(inventoryPage.cartBadge).toHaveText('1');
                 await inventoryPage.cartLink.click();
@@ -66,7 +67,7 @@ test.describe('Navigate menu items', () => {
         { tag: '@regression' },
         async ({ loginPage, inventoryPage, page }) => {
             await test.step('GIVEN the user is logged in and the side menu is open', async () => {
-                await loginPage.login(process.env.APP_USERNAME!, process.env.APP_PASSWORD!);
+                await loginAsStandardUser(loginPage);
                 await inventoryPage.menu.open();
             });
 
@@ -90,7 +91,7 @@ test.describe('Navigate menu items', () => {
         { tag: '@smoke' },
         async ({ loginPage, inventoryPage, page }) => {
             await test.step('GIVEN the user is logged in', async () => {
-                await loginPage.login(process.env.APP_USERNAME!, process.env.APP_PASSWORD!);
+                await loginAsStandardUser(loginPage);
             });
 
             await test.step('WHEN the user logs out via the side menu', async () => {
@@ -113,7 +114,7 @@ test.describe('Navigate menu items', () => {
         { tag: '@regression' },
         async ({ loginPage, inventoryPage, page }) => {
             await test.step('GIVEN the user has logged in and then logged out', async () => {
-                await loginPage.login(process.env.APP_USERNAME!, process.env.APP_PASSWORD!);
+                await loginAsStandardUser(loginPage);
                 await inventoryPage.menu.open();
                 await inventoryPage.menu.logoutLink.click();
                 await expect(page).toHaveURL(/\/$/);
@@ -135,7 +136,7 @@ test.describe('Navigate menu items', () => {
         { tag: '@regression' },
         async ({ loginPage, inventoryPage, page }) => {
             await test.step('GIVEN the user has logged in and then logged out', async () => {
-                await loginPage.login(process.env.APP_USERNAME!, process.env.APP_PASSWORD!);
+                await loginAsStandardUser(loginPage);
                 await inventoryPage.menu.open();
                 await inventoryPage.menu.logoutLink.click();
                 await expect(page).toHaveURL(/\/$/);

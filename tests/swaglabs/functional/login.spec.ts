@@ -1,6 +1,7 @@
 import { expect, test } from '../../../fixtures/pom/test-options';
 import { Messages } from '../../../enums/swaglabs/swaglabs';
 import { PROTECTED_PAGES, REJECTED_LOGIN_ATTEMPTS } from '../../../test-data/static/swaglabs/loginScenarios';
+import { loginAsStandardUser } from '../../../helpers/swaglabs/auth';
 
 test.describe('Login', () => {
     test.beforeEach(async ({ resetStorageState, loginPage }) => {
@@ -43,7 +44,7 @@ test.describe('Login', () => {
         { tag: '@smoke' },
         async ({ loginPage, inventoryPage, page }) => {
             await test.step('WHEN the user submits valid credentials', async () => {
-                await loginPage.login(process.env.APP_USERNAME!, process.env.APP_PASSWORD!);
+                await loginAsStandardUser(loginPage);
             });
 
             await test.step('THEN the user is redirected to the Products page', async () => {

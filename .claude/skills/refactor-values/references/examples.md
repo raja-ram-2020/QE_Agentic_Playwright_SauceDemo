@@ -1,28 +1,27 @@
 # Refactor-Values — Worked Examples
 
-## Example 1: API endpoint URL changed
+## Example 1: Route path changed
 
-The backend renamed `/api/users/login` → `/api/auth/login`.
+The app renamed `/inventory.html` → `/catalog.html`.
 
 ```typescript
 // enums/{area}/app.ts -- BEFORE
-export enum ApiEndpoints {
-    LOGIN = '/api/users/login',
+export enum Routes {
+    INVENTORY = '/inventory.html',
 }
 
 // enums/{area}/app.ts -- AFTER
-export enum ApiEndpoints {
-    LOGIN = '/api/auth/login',
+export enum Routes {
+    INVENTORY = '/catalog.html',
 }
 ```
 
 **Required follow-up:**
 
-- Search for `'/api/users/login'` — anyone who hardcoded it instead of using the enum must be updated.
-- Search for `ApiEndpoints.LOGIN` — verify all usages are correct (no string concatenation that would silently use the old value).
-- Check `fixtures/api/schemas/` for any schema using the old path as a `z.literal()`.
-- Check `helpers/` and `tests/{area}/auth.setup.ts` for hardcoded endpoint strings.
-- Check `README.md`, `CHANGELOG.md`, and sibling skill files (`api-testing`, `common-tasks`, `enums`) for documentation references.
+- Search for `'/inventory.html'` — anyone who hardcoded it instead of using the enum must be updated.
+- Search for `Routes.INVENTORY` — verify all usages are correct (no string concatenation that would silently use the old value).
+- Check `tests/{area}/functional/` and `tests/{area}/e2e/` for hardcoded route strings.
+- Check `README.md`, `CHANGELOG.md`, and sibling skill files (`common-tasks`, `enums`) for documentation references.
 
 ## Example 2: UI error message wording changed
 

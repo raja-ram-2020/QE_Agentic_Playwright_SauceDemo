@@ -12,6 +12,10 @@ export default defineConfig({
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
     workers: process.env.CI ? 1 : undefined,
+    timeout: process.env.CI ? 60_000 : 30_000,
+    expect: {
+        timeout: 5_000,
+    },
     reporter: [
         ['html'],
         ['allure-playwright', { resultsDir: 'allure-results'}],
@@ -24,6 +28,8 @@ export default defineConfig({
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
         testIdAttribute: 'data-test',
+        actionTimeout: 15_000,
+        navigationTimeout: 30_000,
     },
     projects: [
         {

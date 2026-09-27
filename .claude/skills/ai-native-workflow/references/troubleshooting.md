@@ -3,7 +3,7 @@
 ## The agent generated something that doesn't follow the scaffold's conventions
 
 **Cause:** The relevant specialized skill wasn't loaded — the agent worked from generic Playwright knowledge.
-**Fix:** Name the skill explicitly in the prompt ("use the `api-testing` skill"). The skill will load and the Critical block will catch what was missed.
+**Fix:** Name the skill explicitly in the prompt ("use the `page-objects` skill"). The skill will load and the Critical block will catch what was missed.
 
 ## The agent is asking too many questions; I just want it to do the work
 
@@ -13,7 +13,7 @@
 ## The agent invented a folder name / enum value / env-var name
 
 **Cause:** Critical rule violated — the agent should have stopped and asked.
-**Fix:** Direct it to re-check via `ls` (paths), `playwright-cli` (UI text), `env/.env.example` (env vars), or the OpenAPI doc (API contracts). If still unknown, the agent must stop and ask the human.
+**Fix:** Direct it to re-check via `ls` (paths), `playwright-cli` (UI text), or `env/.env.example` (env vars). If still unknown, the agent must stop and ask the human.
 
 ## The agent skipped exploration and invented selectors
 
@@ -38,7 +38,7 @@
 ## The agent suppressed a test failure (raised timeout, added `try/catch`, removed an assertion)
 
 **Cause:** Critical rule violation — `debugging` Critical forbids suppression.
-**Fix:** Reject the change. Re-load `debugging` and follow Phase 4 (right tool) + Phase 5 (root-cause fix table). For genuine API mismatches, `api-testing` Phase 7 (`test.skip` + `// FIXME:`).
+**Fix:** Reject the change. Re-load `debugging` and follow Phase 4 (right tool) + Phase 5 (root-cause fix table). For a genuine app bug, `test.skip` + `// FIXME:` — never a silently suppressed failure.
 
 ## The agent skipped Phase 4 (Plan + Confidence) and started editing
 

@@ -1,7 +1,6 @@
 ---
 name: test-standards
-description: Spec file conventions for the Playwright scaffold — imports from test-options.ts, test file structure (describe / beforeEach / test / test.step), single-tag rule, functional vs E2E vs API vs setup test types, data-driven test loops against TS static data, web-first assertions, destructive-test cleanup, and test independence. Use when creating a new spec file, adding tests to an existing spec, deciding which test type or tag to use, writing data-driven loops, wiring destructive cleanup, or reviewing a test for compliance. For the deep API test-coverage matrix and negative-testing patterns see the api-testing skill; for factories and static data see the data-strategy skill; for prompt templates see the common-tasks skill; for page object usage from tests see the fixtures and page-objects skills.
-author: Ivan Davidov
+description: Spec file conventions for the Playwright scaffold — imports from test-options.ts, test file structure (describe / beforeEach / test / test.step), single-tag rule, functional vs E2E vs setup test types, data-driven test loops against TS static data, web-first assertions, destructive-test cleanup, and test independence. Use when creating a new spec file, adding tests to an existing spec, deciding which test type or tag to use, writing data-driven loops, wiring destructive cleanup, or reviewing a test for compliance. For factories and static data see the data-strategy skill; for prompt templates see the common-tasks skill; for page object usage from tests see the fixtures and page-objects skills.
 ---
 
 # Test Standards
@@ -10,8 +9,8 @@ author: Ivan Davidov
 
 - **Imports:** Import `test` and `expect` from `fixtures/pom/test-options.ts`. **NEVER** from `@playwright/test` in spec files.
 - **New spec files need an approved scenario matrix first.** Before writing a *new* spec file, or a new `test.describe()` block covering previously-untested behavior, draft the scenarios as a reviewable Excel file and get explicit human approval before generating any test code. See Phase 0. Skip only when the human explicitly says to skip it, or when the change is a small addition to an already-approved, already-existing `describe()` block.
-- **Single-tag rule:** Each test has **exactly one** tag chosen from `@smoke` | `@sanity` | `@regression` | `@e2e` | `@api` | `@destructive`. **NEVER** combine tags. **NEVER** use `@functional`. **NEVER** put tags on `test.describe()` blocks.
-- **`@destructive` is the heaviest tag and always wins — but only for shared/global state.** A test that mutates state other tests or users depend on (locale, permissions, roles, guest access, feature flags, global settings) is tagged **only** `@destructive`. A test that creates and deletes **only its own data** is isolated, not destructive — tag it by importance (`@smoke` / `@sanity` / `@regression` / `@e2e` / `@api`).
+- **Single-tag rule:** Each test has **exactly one** tag chosen from `@smoke` | `@sanity` | `@regression` | `@e2e` | `@destructive`. **NEVER** combine tags. **NEVER** use `@functional`. **NEVER** put tags on `test.describe()` blocks.
+- **`@destructive` is the heaviest tag and always wins — but only for shared/global state.** A test that mutates state other tests or users depend on (locale, permissions, roles, guest access, feature flags, global settings) is tagged **only** `@destructive`. A test that creates and deletes **only its own data** is isolated, not destructive — tag it by importance (`@smoke` / `@sanity` / `@regression` / `@e2e`).
 - **Every state-mutating test** must have `test.afterEach()` or `test.afterAll()` cleanup that reverts the change — both `@destructive` shared-state tests and isolated tests that write their own data.
 - **Web-first assertions only** (`await expect(locator).toBeVisible()`, `.toHaveText()`, `.toBeEnabled()`, `.toHaveCount(...)`, etc.). **NEVER** `page.waitForTimeout(...)`.
 - **Use `test.step()` for Given/When/Then structure** when a test has more than one distinct phase (setup, action, assertion).
@@ -29,7 +28,6 @@ author: Ivan Davidov
 | Test Type  | Directory                  | What it covers                                         |
 | ---------- | -------------------------- | ------------------------------------------------------ |
 | Functional | `tests/{area}/functional/` | One feature or behaviour in isolation                  |
-| API        | `tests/{area}/api/`        | API contracts and response validation                  |
 | E2E        | `tests/{area}/e2e/`        | A complete multi-feature user journey in a single test |
 | Setup      | `tests/{area}/`            | Auth or precondition setup (`.setup.ts`)               |
 
@@ -47,8 +45,7 @@ previously-untested behavior — draft the scenarios and get human sign-off befo
 any Playwright code. This mirrors the `ai-native-workflow` human gate, applied specifically
 to test-scenario content rather than an implementation plan.
 
-1. **Explore first.** Use the normal exploration requirement for the area — `playwright-cli`
-   for UI (see `selectors` / `page-objects`), OpenAPI for API (see `api-testing`) — so scenario
+1. **Explore first.** Use `playwright-cli` (see `selectors` / `page-objects`) so scenario
    steps, test data, and expected results reflect the real app, not assumptions.
 2. **Draft the scenario matrix as an Excel file** using the `xlsx` skill — not a markdown
    table, not inline chat text. Save it at `test-scenarios/{area}/[feature]-test-scenarios.xlsx`
@@ -57,7 +54,7 @@ to test-scenario content rather than an implementation plan.
      single tag the test will carry once automated), `Preconditions`, `Test Steps`,
      `Test Data`, `Expected Result`, `Approved (Y/N)`.
    - Cover happy path, validation/negative paths, and error paths appropriate to the test
-     type (functional/E2E coverage per this skill; API coverage per the `api-testing` matrix).
+     type (functional/E2E coverage per this skill).
    - Leave out `Automated` / `Spec Reference` columns — the spec doesn't exist yet.
 3. **Present the file to the human and stop.** Do not proceed to Phase 1 in the same turn.
    Wait for explicit approval or change requests.
@@ -71,7 +68,7 @@ to test-scenario content rather than an implementation plan.
 
 ### Phase 1: Classify the test type and pick the location
 
-Determine whether the work is a **functional**, **E2E**, **API**, or **setup** test, then run `ls tests/` to resolve `{area}` and place the file in `tests/{area}/<type>/[name].spec.ts` (or `tests/{area}/[name].setup.ts` for setup). Never guess the area.
+Determine whether the work is a **functional**, **E2E**, or **setup** test, then run `ls tests/` to resolve `{area}` and place the file in `tests/{area}/<type>/[name].spec.ts` (or `tests/{area}/[name].setup.ts` for setup). Never guess the area.
 
 ### Phase 2: Write the imports and file skeleton
 
@@ -109,10 +106,9 @@ Each test gets **exactly one** tag. Pick the right one:
 | `@sanity`      | Key functionality verification                                                                                                                                            |
 | `@regression`  | Full regression coverage of a single behaviour                                                                                                                            |
 | `@e2e`         | End-to-end multi-feature user journey tests                                                                                                                               |
-| `@api`         | API contract and schema validation tests                                                                                                                                  |
 | `@destructive` | Mutates **shared/global** state (locale, permissions, roles, guest access, feature flags, global settings) — excluded from `npm test`, run via `npm run test:destructive` |
 
-**`@destructive` overrides any other importance tag — for shared/global state mutation only.** If a test would otherwise be `@smoke` but changes global settings, it is tagged **only** `@destructive`. A test that creates and cleans up **only its own data** is isolated, not destructive — keep its importance tag (`@smoke`/`@regression`/`@api`/…).
+**`@destructive` overrides any other importance tag — for shared/global state mutation only.** If a test would otherwise be `@smoke` but changes global settings, it is tagged **only** `@destructive`. A test that creates and cleans up **only its own data** is isolated, not destructive — keep its importance tag (`@smoke`/`@regression`/…).
 
 ```typescript
 // CORRECT
@@ -122,13 +118,10 @@ test('should login successfully', { tag: '@smoke' }, async ({ appPage }) => {
 test('should validate cart flow', { tag: '@e2e' }, async ({ checkoutPage }) => {
     /* ... */
 });
-test('should return user profile', { tag: '@api' }, async ({ apiRequest }) => {
-    /* ... */
-});
 test(
-    'should delete all users',
+    'should reset all user accounts',
     { tag: '@destructive' },
-    async ({ apiRequest }) => {
+    async ({ appPage }) => {
         /* ... */
     }
 );
@@ -180,7 +173,7 @@ test(
 );
 ```
 
-For API tests with multiple calls, `test.step` is **mandatory** — see the `api-testing` skill (Phase 4).
+Use `test.step` for any test with more than one distinct phase — it's what makes the HTML report readable.
 
 ### Phase 5: Use web-first assertions
 
@@ -212,7 +205,7 @@ test.beforeEach(async ({ resetStorageState, appPage }) => {
 });
 ```
 
-For API-driven setup/teardown reused across many files, see the `api-testing` skill (Phase 8, helper-fixture rule of thumb).
+For setup/teardown reused across many files, see the `fixtures` skill's helper-fixture rule of thumb.
 
 ### Phase 7: Handle destructive tests
 
@@ -223,28 +216,23 @@ For API-driven setup/teardown reused across many files, see the `api-testing` sk
 - toggling **feature flags** or global settings / configuration
 - mutating **shared seed data** every test reads (e.g. "delete all users", resetting a global catalog)
 
-**Counter-example — NOT destructive.** A test that creates its **own** record, asserts on it, then deletes **only that record** in cleanup is _isolated_, not destructive. It touches no state another test depends on. Tag it by importance (`@smoke` / `@regression` / `@api` / …) — never `@destructive`. It still needs a cleanup hook (see below), but it runs in the parallel suite.
+**Counter-example — NOT destructive.** A test that creates its **own** record, asserts on it, then deletes **only that record** in cleanup is _isolated_, not destructive. It touches no state another test depends on. Tag it by importance (`@smoke` / `@regression` / …) — never `@destructive`. It still needs a cleanup hook (see below), but it runs in the parallel suite.
 
 **Cleanup hook is required for any state-mutating test.** Both `@destructive` shared-state tests and isolated own-data tests **MUST** use `test.afterEach()` or `test.afterAll()` to revert what they wrote:
 
 ```typescript
-test.describe('admin data management', () => {
-    test.afterEach(async ({ apiRequest }) => {
+test.describe('admin locale settings', () => {
+    test.afterEach(async ({ adminPage }) => {
         // REQUIRED: Revert state changes made by the test.
-        // ApiEndpoints.RESET_DATA is illustrative -- use whatever reset
-        // endpoint your app provides, defined in enums/{area}/*.ts.
-        await apiRequest({
-            method: 'POST',
-            url: ApiEndpoints.RESET_DATA,
-            baseUrl: process.env.API_URL,
-            headers: process.env.ACCESS_TOKEN,
-        });
+        // Use whatever admin control your app exposes to restore the default,
+        // driven through the UI just like the test itself.
+        await adminPage.setLocale('en-US');
     });
 
     test(
-        'should delete all inactive users',
+        'should switch the application locale to fr-FR',
         { tag: '@destructive' },
-        async ({ apiRequest }) => {
+        async ({ adminPage }) => {
             // Test that modifies shared state
         }
     );
@@ -254,7 +242,7 @@ test.describe('admin data management', () => {
 **Execution rules:**
 
 - **Excluded from `npm test`** — the base command uses `--grep-invert @destructive` to keep destructive tests out of the parallel suite.
-- **Tag-specific commands** (`test:smoke`, `test:regression`, `test:api`, etc.) use `--grep` to match their own tag. Because each test has **exactly one** tag, a `@destructive` test only runs under `npm run test:destructive` — not under `test:smoke`, `test:regression`, etc.
+- **Tag-specific commands** (`test:smoke`, `test:regression`, etc.) use `--grep` to match their own tag. Because each test has **exactly one** tag, a `@destructive` test only runs under `npm run test:destructive` — not under `test:smoke`, `test:regression`, etc.
 - **Dedicated command** — `npm run test:destructive` runs only destructive tests with `--workers=1` for sequential execution.
 
 ### Phase 8: Data-driven tests
@@ -299,8 +287,7 @@ Do not finish until the added/modified tests pass consistently. Do not suppress 
 
 ## See Also
 
-- **`api-testing`** skill — full API test coverage matrix, `test.step` requirements for multi-call tests, per-field negative-testing patterns, helper-fixture promotion rule (Phase 8).
-- **`data-strategy`** skill — Faker + Zod factories, three-tier static data rule, universal invalid-value arrays, TS-only policy.
+- **`data-strategy`** skill — Faker factories, three-tier static data rule, universal invalid-value arrays, TS-only policy.
 - **`fixtures`** skill — DI pattern, `test-options.ts` merge layer, page-object fixture registration.
 - **`page-objects`** skill — POM class structure, action methods, component composition, fixture registration.
 - **`selectors`** skill — exploration-first workflow, locator priority, feedback / validation message selectors.

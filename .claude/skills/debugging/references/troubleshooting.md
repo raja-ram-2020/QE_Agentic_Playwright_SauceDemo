@@ -27,7 +27,7 @@
 ## I added `try/catch` around `expect(...)` so the test "passes"
 
 **Cause:** Suppressing an assertion is a coverage drop.
-**Fix:** Remove the catch. If the API is the bug, follow `api-testing` Phase 7. If the test logic is wrong, fix the test.
+**Fix:** Remove the catch. If the app genuinely misbehaves, use `test.skip` + `// FIXME: <ticket-url>` instead of swallowing the failure. If the test logic is wrong, fix the test.
 
 ## I think the failure is intermittent (flaky)
 

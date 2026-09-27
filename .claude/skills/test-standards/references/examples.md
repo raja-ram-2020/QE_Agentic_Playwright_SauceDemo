@@ -61,30 +61,20 @@ test.describe('login - invalid credentials', () => {
 
 ```typescript
 import { expect, test } from '../../../fixtures/pom/test-options';
-import { ApiEndpoints } from '../../../enums/app/app';
 
-test.describe('admin - data management', () => {
-    test.afterEach(async ({ apiRequest }) => {
-        await apiRequest({
-            method: 'POST',
-            url: ApiEndpoints.RESET_DATA, // illustrative
-            baseUrl: process.env.API_URL,
-            headers: process.env.ACCESS_TOKEN,
-        });
+test.describe('admin - locale settings', () => {
+    test.afterEach(async ({ adminPage }) => {
+        // Restore the default locale through the same UI control the test used.
+        await adminPage.setLocale('en-US');
     });
 
     test(
-        'should delete all inactive users',
+        'should switch the application locale to fr-FR',
         { tag: '@destructive' },
-        async ({ apiRequest }) => {
-            const { status } = await apiRequest({
-                method: 'DELETE',
-                url: '/api/admin/inactive-users',
-                baseUrl: process.env.API_URL,
-                headers: process.env.ACCESS_TOKEN,
-            });
+        async ({ adminPage }) => {
+            await adminPage.setLocale('fr-FR');
 
-            expect(status).toBe(204);
+            await expect(adminPage.confirmationBanner).toBeVisible();
         }
     );
 });

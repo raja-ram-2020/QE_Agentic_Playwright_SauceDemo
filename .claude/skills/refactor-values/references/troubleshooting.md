@@ -12,13 +12,8 @@
 
 ## `npx playwright test --grep 'login'` didn't run my test
 
-**Cause:** `--grep` matches **tag names** and **test titles**. If your test is tagged `@api` and doesn't have "login" in its title, it won't match.
-**Fix:** Run the spec file directly (`npx playwright test tests/app/api/login.spec.ts`), or grep by tag (`--grep @api`).
-
-## Zod schema throws `Invalid literal value` after updating an enum value
-
-**Cause:** The schema still has `z.literal('old-value')` or `z.enum([..., 'old-value'])`.
-**Fix:** Update the literal/enum to the new value. Do **not** relax to `z.string()` — that hides future drift (see Anti-Pattern 4 in `SKILL.md`).
+**Cause:** `--grep` matches **tag names** and **test titles**. If your test is tagged `@regression` and doesn't have "login" in its title, it won't match.
+**Fix:** Run the spec file directly (`npx playwright test tests/app/functional/login.spec.ts`), or grep by tag (`--grep @regression`).
 
 ## My global find-and-replace missed matches in README / skill files / rules
 

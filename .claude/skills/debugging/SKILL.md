@@ -1,7 +1,6 @@
 ---
 name: debugging
-description: Playwright test debugging conventions for the scaffold — reading failure messages, classifying failure modes (TimeoutError, ZodError, strict-mode violation, locator not found, network errors, schema drift), the playwright.config.ts capture defaults (trace on-first-retry, screenshot only-on-failure, video retain-on-failure), the right tool per failure (UI Mode / Trace Viewer / Inspector / headed), the npm-script entry points (test:ui, test:debug, test:headed, report), reproducing locally, fixing without suppressing, and pulling CI artifacts to replay a CI-only failure locally. Use whenever a Playwright test fails or behaves unexpectedly, when triaging a flaky test, when investigating a `ZodError` from `Schema.parse(body)`, when a CI run is red but local is green, or when an action / assertion / navigation times out.
-author: Ivan Davidov
+description: Playwright test debugging conventions for the scaffold — reading failure messages, classifying failure modes (TimeoutError, strict-mode violation, locator not found, network errors), the playwright.config.ts capture defaults (trace on-first-retry, screenshot only-on-failure, video retain-on-failure), the right tool per failure (UI Mode / Trace Viewer / Inspector / headed), the npm-script entry points (test:ui, test:debug, test:headed, report), reproducing locally, fixing without suppressing, and pulling CI artifacts to replay a CI-only failure locally. Use whenever a Playwright test fails or behaves unexpectedly, when triaging a flaky test, when a CI run is red but local is green, or when an action / assertion / navigation times out.
 ---
 
 # Debugging
@@ -11,7 +10,7 @@ When a test fails, you investigate first and fix second. This skill is the canon
 ## Critical
 
 - **ALWAYS read the failure message first.** Playwright errors identify the failing locator, assertion, timeout type, and source line. Skim the message before changing any code or guessing.
-- **NEVER suppress a failure.** Don't add `test.skip` without `// FIXME: <ticket-url>`, don't loosen an assertion, don't bump timeouts to make a flake pass, don't `try/catch` an `expect` to swallow it. If the API genuinely misbehaves, follow the `api-testing` Phase 7 behaviour-mismatch protocol.
+- **NEVER suppress a failure.** Don't add `test.skip` without `// FIXME: <ticket-url>`, don't loosen an assertion, don't bump timeouts to make a flake pass, don't `try/catch` an `expect` to swallow it.
 - **NEVER add `page.waitForTimeout(...)` to "fix" a timing issue.** Hard waits hide the real cause. Use a web-first assertion (`await expect(locator).toBeVisible()`) or `page.waitForResponse(...)` instead.
 - **NEVER push a fix you can't reproduce locally.** Pull the CI trace and replay it before believing the issue is resolved.
 - **`trace` is opt-in for retries.** This scaffold's `playwright.config.ts` sets `trace: 'on-first-retry'`. Locally `retries: 0`, so traces are **NOT** captured by default. To get a trace locally, either run with `--trace on` (or `--trace retain-on-failure`) or use UI Mode (`npm run test:ui`).
@@ -82,8 +81,7 @@ Map the message to the right category — each routes to a different tool and so
 | `TimeoutError` on **navigation**      | `page.goto(...) Timeout 30000ms exceeded`                             | Wrong URL, env not set, app down, slow first-load (cold cache)                                                    | Verify `process.env.APP_URL`; curl it; check `env/.env.${ENVIRONMENT}`                                                    |
 | **Strict mode violation: 2 elements** | `Error: strict mode violation: getByRole(...) resolved to 2 elements` | Locator matches multiple — selector too loose                                                                     | `selectors` skill; add `{ exact: true }`, scope to a parent, switch to a more specific role                               |
 | `expect()` mismatch                   | `Expected: "X" / Received: "Y"`                                       | Page state, data, or the **enum value** drifted                                                                   | Compare received vs expected; if a `Messages.*` value drifted, follow `refactor-values`                                   |
-| `ZodError`                            | `expect(SchemaName.parse(body)).toBeTruthy()` throws                  | API response disagrees with the schema (contract drift)                                                           | If the contract is documented, this is a **bug** → `api-testing` Phase 7. If not, schema needs updating to the real shape |
-| Network error                         | `ECONNREFUSED`, `getaddrinfo ENOTFOUND`, 5xx                          | Wrong base URL, app/API down, missing env var, missing token                                                      | Verify `process.env.API_URL`, `process.env.ACCESS_TOKEN`; see the `config` and `helpers` skills                           |
+| Network error                         | `ECONNREFUSED`, `getaddrinfo ENOTFOUND`, 5xx                          | Wrong base URL, app down, missing env var                                                                         | Verify `process.env.APP_URL`; see the `config` skill                                                                      |
 | Element not found                     | `Error: locator.X: ... element is not attached to the DOM`            | Page replaced before action, frame swap, navigation race                                                          | Trace Viewer; check if action fired before/after navigation                                                               |
 | `ReferenceError` / `TypeError`        | `appPage is undefined`, `cannot read property X of undefined`         | Fixture not registered, bad import (from `@playwright/test` instead of `test-options.ts`), missing factory output | `fixtures` / `test-standards` Critical                                                                                    |
 | Test passes alone, fails in suite     | Green with `--grep`, red without                                      | Test independence violated (shared state, missing `resetStorageState`, parallel collision)                        | `test-standards` Phase 9; promote shared mutators to `@destructive` with cleanup                                          |
@@ -118,7 +116,7 @@ Best when you can reproduce locally and want fast iteration.
 - Use the **timeline** to scrub through every action; each step shows the DOM snapshot at that moment.
 - Use the **Pick locator** tool to test a candidate selector against the live DOM.
 - Watch mode re-runs on save — change the page object or test, see the result instantly.
-- The **Network** tab shows API calls (URL, status, request/response) — directly answers many `ZodError` questions.
+- The **Network** tab shows every request the page made (URL, status, request/response) — useful for diagnosing a stuck spinner or a feature that silently failed to load data.
 
 #### Trace Viewer — `npx playwright show-trace <path/to/trace.zip>` (GUI post-mortem)
 
@@ -186,9 +184,7 @@ Map the diagnosis to a fix in the right place. **Do not patch in the test if the
 | Locator returned wrong/zero/many elements            | The page object's getter (see `selectors` + `page-objects`)                                                                   |
 | Action raced ahead of navigation                     | The page object's action method — add `page.waitForResponse(...)` for the API or a web-first assertion for the post-nav state |
 | `Messages.X` value drifted from the live UI          | `enums/{area}/*.ts` via the `refactor-values` workflow                                                                        |
-| Schema disagreed with documented contract            | The test (`test.skip` + `// FIXME: <ticket-url>`) — `api-testing` Phase 7. **NEVER** loosen the schema                        |
-| Schema disagreed with the real response (no docs)    | The schema (`fixtures/api/schemas/...`) — update to match                                                                     |
-| Token missing (`process.env.ACCESS_TOKEN` undefined) | The auth-bootstrap helper / `auth.setup.ts` — see the `helpers` skill                                                         |
+| Test behaves as logged-out mid-test                  | The test's own login call after `resetStorageState()` — see the `helpers` skill                                              |
 | Fixture missing (`appPage` is undefined)             | `fixtures/pom/page-object-fixture.ts` — see the `fixtures` skill                                                              |
 | Tag combined / wrong                                 | The test header — `test-standards` single-tag rule                                                                            |
 | Hardcoded string in `getByText(...)`                 | Replace with `Messages.*` enum (`enums` skill)                                                                                |
@@ -238,7 +234,7 @@ When the test passes locally but fails in CI, you need CI's artifacts to reprodu
 
 4. **Compare environments.**
     - Different env file? CI usually has its own `env/.env.ci` or relies on shell env.
-    - Different storage state? Check whether `auth.setup.ts` ran and produced `.auth/app/appStorageState.json`.
+    - Different starting state? This scaffold has no persisted storage state — confirm `resetStorageState()` ran in `beforeEach` the same way in both environments.
     - Different viewport / device? `playwright.config.ts` `chromium` project uses `1920x1080`; if your local default differs, layout-sensitive locators may behave differently.
     - Different browser version? CI installs whatever the Docker image / `@playwright/test` version brings.
 5. **Replay the same conditions locally.**
@@ -249,16 +245,15 @@ When the test passes locally but fails in CI, you need CI's artifacts to reprodu
 
 ## See Also
 
-- **`api-testing`** skill — Phase 7 behaviour-mismatch protocol (`test.skip` + `// FIXME:`), Phase 6 negative-coverage patterns where the same `ZodError` types appear.
 - **`refactor-values`** skill — when a fix involves changing an enum value, an enum key, or a static-data file (cascading updates and verification).
 - **`selectors`** skill — locator priority, scoping for strict-mode violations, exploration-first workflow when a locator no longer matches.
 - **`page-objects`** skill — where action methods live; `page.waitForResponse(...)` belongs there, not in the spec.
 - **`fixtures`** skill — fixture lifecycle, registration; "fixture is undefined" errors live here.
-- **`helpers`** skill — auth bootstrap and how `process.env.ACCESS_TOKEN` is populated; debug `undefined` token errors here.
+- **`helpers`** skill — how this scaffold actually handles auth (`resetStorageState` + per-test login, no persisted session).
 - **`test-standards`** skill — single-tag rule, destructive cleanup, test independence (Phase 9) — the source of most "passes alone, fails in suite" issues.
-- **`type-safety`** skill — Zod 4 patterns, `expect(Schema.parse(body)).toBeTruthy();` enforcement, `zInput` vs `zOutput` confusion behind unexpected `ZodError`s.
-- **`config`** skill — env file selection (`ENVIRONMENT`), `process.env.*` correctness, where `APP_URL` / `API_URL` are sourced.
+- **`type-safety`** skill — no-`any` and explicit-return-type enforcement.
+- **`config`** skill — env file selection (`ENVIRONMENT`), `process.env.*` correctness, where `APP_URL` is sourced.
 - **`common-tasks`** skill — Phase 7 (Run tests) routes failures here; verification checklist.
 - **`ai-native-workflow`** skill — the meta workflow: how to ask, how to escalate, how to commit a fix, and the audit-then-edit pattern that keeps debugging sessions consistent across agents.
-- **`references/examples.md`** — four worked debug scenarios (action timeout, ZodError contract drift, suite-only failure, CI-only failure).
+- **`references/examples.md`** — four worked debug scenarios (action timeout, UI-text drift, suite-only failure, CI-only failure).
 - **`references/troubleshooting.md`** — common debugging pitfalls (missing trace, stale report, committed `test.only`, UI Mode resource use, timeout bump, suppressed `expect`, flake diagnosis, destructive leak, cross-browser).

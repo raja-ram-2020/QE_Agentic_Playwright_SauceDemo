@@ -1,7 +1,6 @@
 ---
 name: refactor-values
-description: Safe refactoring workflow for enum values, enum keys, and static test data in test-data/static/*.ts — mandatory impact analysis, cascading updates, and verification. Use BEFORE changing any enum member's string value (ApiEndpoints.*, Messages.*, Roles, StorageStatePaths), renaming any enum key, or editing any existing file under test-data/static/. Running this workflow prevents silent test failures, TypeScript errors from stale imports, and assertion drift from hardcoded strings that bypass the enum. For defining NEW enums see the enums skill; for adding NEW static data see the data-strategy skill (three-tier rule).
-author: Ivan Davidov
+description: Safe refactoring workflow for enum values, enum keys, and static test data in test-data/static/*.ts — mandatory impact analysis, cascading updates, and verification. Use BEFORE changing any enum member's string value (Routes.*, Messages.*, Roles), renaming any enum key, or editing any existing file under test-data/static/. Running this workflow prevents silent test failures, TypeScript errors from stale imports, and assertion drift from hardcoded strings that bypass the enum. For defining NEW enums see the enums skill; for adding NEW static data see the data-strategy skill (three-tier rule).
 ---
 
 # Refactoring Enum Values and Static Test Data
@@ -11,7 +10,6 @@ author: Ivan Davidov
 - **ALWAYS** run Phase 1 (find all consumers) before making any edit. Enum values and static data feed into tests, page objects, schemas, and assertions — the blast radius must be known up front.
 - **ALWAYS** search for both the **enum key** (`Messages.LOGIN_ERROR`) **and the raw string value** (`'Invalid email or password'`). Some consumers may have bypassed the enum and hardcoded the string — they won't update when you change the enum.
 - **NEVER** update an enum value, rename a key, or edit a static-data file without updating every consumer **in the same commit** (atomicity — no intermediate broken state).
-- **NEVER** loosen a Zod schema (`z.literal` / `z.enum`) to make an updated value pass. Update the schema to match the new value; the schema is the contract.
 - **ALWAYS** run `npx tsc --noEmit` + `npx eslint .` + the affected tests before concluding the refactor. TypeScript catches key renames; eslint catches stale patterns; tests catch assertion drift.
 - **NEVER** use a single global find-and-replace — it misses case variants, hardcoded copies, and references inside comments, documentation, and sibling skill files. Inspect each match.
 
@@ -35,9 +33,9 @@ grep -r "Messages.LOGIN_ERROR" .
 rg "Invalid email or password" .
 grep -r "Invalid email or password" .
 
-# For endpoint changes, search both
-rg "ApiEndpoints.LOGIN" .
-rg "'/api/users/login'" .
+# For route changes, search both
+rg "Routes.INVENTORY" .
+rg "'/inventory.html'" .
 ```
 
 > Do this before making any edits. Understand the full blast radius first. Expect matches in `.ts`, `.tsx`, `.md` (skill files, README, CHANGELOG), and `.json` (Playwright reports — ignore).
@@ -52,8 +50,6 @@ Pick the table that matches the change you are making.
 | ----------------------------------------------------------------------------- | ---------------------- | ------------------------------------------------- |
 | Tests with `toHaveText()` / `toBeVisible()` using the old raw value           | Will fail if hardcoded | Update to use enum or new value                   |
 | Page object locators using `getByText(Messages.X)`                            | Auto-updated via enum  | No change needed — enum reference already correct |
-| Zod schemas with `z.literal('old-value')` or `z.enum([..., 'old-value'])`     | Will reject new value  | Update literal/enum to new value                  |
-| API endpoint paths in `apiRequest` calls                                      | Will call wrong URL    | Update enum reference or hardcoded path           |
 | Static data in `test-data/static/*.ts` using the old string as expected value | Test data mismatch     | Update the `as const` entry                       |
 | Other enum members that derive from this value                                | Indirect breakage      | Audit and update                                  |
 
@@ -95,12 +91,12 @@ npx tsc --noEmit
 npx eslint .
 
 # 3. Run tests that use the changed value (adjust grep pattern)
-npx playwright test --grep "@api"
+npx playwright test --grep "@regression"
 ```
 
 Notes on `npx playwright test --grep`:
 
-- Matches against **tag names** (`@smoke`, `@api`, etc.) and against **test titles**. Use the most specific filter.
+- Matches against **tag names** (`@smoke`, `@regression`, etc.) and against **test titles**. Use the most specific filter.
 - If the change touches a single spec file, run that file directly instead of `--grep`.
 
 If any test fails, trace the failure back to a missed consumer from Phase 1 and update it.
@@ -133,26 +129,12 @@ Messages.LOGIN_ERROR; // ❌ Property 'LOGIN_ERROR' does not exist
 expect(response.password).toBe('WrongPassword123!'); // ❌ stale assertion
 ```
 
-```typescript
-// ANTI-PATTERN 4 -- Zod schema loosened to "fix" a drift
-// BEFORE
-role: z.literal('admin'),
-
-// WRONG -- hides future drift instead of tracking the contract
-role: z.string(),
-
-// CORRECT -- update the literal to the new value (or switch to z.enum([...])
-// if multiple values are valid)
-role: z.literal('administrator'),
-```
-
 ## See Also
 
 - **`enums`** skill — enum conventions, organization, and how to define NEW enums (this skill covers CHANGING existing ones).
 - **`data-strategy`** skill — static data file structure (`.ts` with `as const` exports, three-tier rule) and how to ADD new static data.
 - **`test-standards`** skill — how data-driven tests import and use static TS modules.
-- **`type-safety`** skill — Zod schema patterns; `z.literal()` and `z.enum()` that may reference enum values.
-- **`api-testing`** skill — consumers of `ApiEndpoints.*` and how schema drift is handled via `test.skip` + `// FIXME:`.
-- **`debugging`** skill — Phase 4 verification failures during a refactor (text mismatch, ZodError, strict-mode violation) — classify the failure and use the right tool before assuming the refactor itself is wrong.
-- **`references/examples.md`** — four worked refactors (endpoint URL change, UI message wording change, enum key rename, static-data value change).
-- **`references/troubleshooting.md`** — common refactor pitfalls (hardcoded-old-string failure, missed consumer, `--grep` confusion, Zod literal drift, find-and-replace gaps in docs/mirrors).
+- **`type-safety`** skill — TypeScript typing rules applied to enum consumers.
+- **`debugging`** skill — Phase 4 verification failures during a refactor (text mismatch, strict-mode violation) — classify the failure and use the right tool before assuming the refactor itself is wrong.
+- **`references/examples.md`** — four worked refactors (route path change, UI message wording change, enum key rename, static-data value change).
+- **`references/troubleshooting.md`** — common refactor pitfalls (hardcoded-old-string failure, missed consumer, `--grep` confusion, find-and-replace gaps in docs/mirrors).

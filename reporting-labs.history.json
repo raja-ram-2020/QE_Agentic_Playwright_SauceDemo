@@ -1302,5 +1302,600 @@
     1672
    ]
   }
+ },
+ {
+  "time": 1790426561880,
+  "duration": 114.44799999999998,
+  "passed": 0,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 27,
+  "total": 27,
+  "tests": {
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should display all required elements on initial page load": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to the Products page on successful login": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for both fields empty": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username empty, password filled": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password empty, username filled": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for unregistered username": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for valid username with wrong password": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for locked-out user": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username case does not match a registered user": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password case does not match the registered password": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username has leading whitespace": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should dismiss the login error and retain previously entered field values": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should mask the password input while typing": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should submit the login form via the Enter key from the Password field": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should move keyboard focus Username → Password → Login via Tab": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to the Products page without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Cart without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Inventory item detail without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step one without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step two without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout complete without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should open the side menu via the burger icon and close it via the close button": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Products page via 'All Items' and preserve cart state": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Sauce Labs site via 'About'": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should log out, clear the session, and return to the Login page": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should not restore the session when using the browser Back button after logout": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should redirect to Login when navigating directly to a protected page after logout": [
+    "s",
+    0
+   ]
+  }
+ },
+ {
+  "time": 1790473608874,
+  "duration": 40.35500000000002,
+  "passed": 0,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 27,
+  "total": 27,
+  "tests": {
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should display all required elements on initial page load": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to the Products page on successful login": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for both fields empty": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username empty, password filled": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password empty, username filled": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for unregistered username": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for valid username with wrong password": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for locked-out user": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username case does not match a registered user": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password case does not match the registered password": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username has leading whitespace": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should dismiss the login error and retain previously entered field values": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should mask the password input while typing": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should submit the login form via the Enter key from the Password field": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should move keyboard focus Username → Password → Login via Tab": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to the Products page without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Cart without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Inventory item detail without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step one without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step two without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout complete without a session": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should open the side menu via the burger icon and close it via the close button": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Products page via 'All Items' and preserve cart state": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Sauce Labs site via 'About'": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should log out, clear the session, and return to the Login page": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should not restore the session when using the browser Back button after logout": [
+    "s",
+    0
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should redirect to Login when navigating directly to a protected page after logout": [
+    "s",
+    0
+   ]
+  }
+ },
+ {
+  "time": 1790475194617,
+  "duration": 13000.074,
+  "passed": 27,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 27,
+  "tests": {
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should display all required elements on initial page load": [
+    "p",
+    2451
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to the Products page on successful login": [
+    "p",
+    2541
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for both fields empty": [
+    "p",
+    2513
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username empty, password filled": [
+    "p",
+    2569
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password empty, username filled": [
+    "p",
+    2476
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for unregistered username": [
+    "p",
+    2528
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for valid username with wrong password": [
+    "p",
+    1188
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for locked-out user": [
+    "p",
+    1493
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username case does not match a registered user": [
+    "p",
+    1498
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password case does not match the registered password": [
+    "p",
+    1505
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username has leading whitespace": [
+    "p",
+    1439
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should dismiss the login error and retain previously entered field values": [
+    "p",
+    1477
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should mask the password input while typing": [
+    "p",
+    1159
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should submit the login form via the Enter key from the Password field": [
+    "p",
+    1267
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should move keyboard focus Username → Password → Login via Tab": [
+    "p",
+    1249
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to the Products page without a session": [
+    "p",
+    1545
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Cart without a session": [
+    "p",
+    1607
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Inventory item detail without a session": [
+    "p",
+    1551
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step one without a session": [
+    "p",
+    1258
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step two without a session": [
+    "p",
+    1174
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout complete without a session": [
+    "p",
+    1242
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should open the side menu via the burger icon and close it via the close button": [
+    "p",
+    2036
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Products page via 'All Items' and preserve cart state": [
+    "p",
+    2318
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Sauce Labs site via 'About'": [
+    "p",
+    3490
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should log out, clear the session, and return to the Login page": [
+    "p",
+    1861
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should not restore the session when using the browser Back button after logout": [
+    "p",
+    1857
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should redirect to Login when navigating directly to a protected page after logout": [
+    "p",
+    1992
+   ]
+  }
+ },
+ {
+  "time": 1790475961162,
+  "duration": 9475.702,
+  "passed": 27,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 27,
+  "tests": {
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should display all required elements on initial page load": [
+    "p",
+    2382
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to the Products page on successful login": [
+    "p",
+    2497
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for both fields empty": [
+    "p",
+    2411
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username empty, password filled": [
+    "p",
+    2274
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password empty, username filled": [
+    "p",
+    2553
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for unregistered username": [
+    "p",
+    2165
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for valid username with wrong password": [
+    "p",
+    1134
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for locked-out user": [
+    "p",
+    1045
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username case does not match a registered user": [
+    "p",
+    1423
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password case does not match the registered password": [
+    "p",
+    1399
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username has leading whitespace": [
+    "p",
+    1488
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should dismiss the login error and retain previously entered field values": [
+    "p",
+    1486
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should mask the password input while typing": [
+    "p",
+    1259
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should submit the login form via the Enter key from the Password field": [
+    "p",
+    1391
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should move keyboard focus Username → Password → Login via Tab": [
+    "p",
+    1198
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to the Products page without a session": [
+    "p",
+    1301
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Cart without a session": [
+    "p",
+    1387
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Inventory item detail without a session": [
+    "p",
+    1428
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step one without a session": [
+    "p",
+    1071
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step two without a session": [
+    "p",
+    1134
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout complete without a session": [
+    "p",
+    1219
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should open the side menu via the burger icon and close it via the close button": [
+    "p",
+    2005
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Products page via 'All Items' and preserve cart state": [
+    "p",
+    2064
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Sauce Labs site via 'About'": [
+    "p",
+    2679
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should log out, clear the session, and return to the Login page": [
+    "p",
+    2049
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should not restore the session when using the browser Back button after logout": [
+    "p",
+    1959
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should redirect to Login when navigating directly to a protected page after logout": [
+    "p",
+    1909
+   ]
+  }
+ },
+ {
+  "time": 1790475973836,
+  "duration": 9212.828,
+  "passed": 27,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "total": 27,
+  "tests": {
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should display all required elements on initial page load": [
+    "p",
+    2099
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to the Products page on successful login": [
+    "p",
+    2563
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for both fields empty": [
+    "p",
+    2116
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username empty, password filled": [
+    "p",
+    2083
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password empty, username filled": [
+    "p",
+    2169
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for unregistered username": [
+    "p",
+    2130
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for valid username with wrong password": [
+    "p",
+    1243
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for locked-out user": [
+    "p",
+    1232
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username case does not match a registered user": [
+    "p",
+    1394
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for password case does not match the registered password": [
+    "p",
+    1249
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should reject login for username has leading whitespace": [
+    "p",
+    1372
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should dismiss the login error and retain previously entered field values": [
+    "p",
+    1441
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should mask the password input while typing": [
+    "p",
+    1234
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should submit the login form via the Enter key from the Password field": [
+    "p",
+    1268
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should move keyboard focus Username → Password → Login via Tab": [
+    "p",
+    1485
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to the Products page without a session": [
+    "p",
+    1362
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Cart without a session": [
+    "p",
+    1245
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Inventory item detail without a session": [
+    "p",
+    1321
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step one without a session": [
+    "p",
+    1114
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout step two without a session": [
+    "p",
+    1499
+   ],
+   "chromium::tests/swaglabs/functional/login.spec.ts::Login › should redirect to Login when navigating directly to Checkout complete without a session": [
+    "p",
+    1150
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should open the side menu via the burger icon and close it via the close button": [
+    "p",
+    2215
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Products page via 'All Items' and preserve cart state": [
+    "p",
+    2225
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should navigate to the Sauce Labs site via 'About'": [
+    "p",
+    2663
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should log out, clear the session, and return to the Login page": [
+    "p",
+    1870
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should not restore the session when using the browser Back button after logout": [
+    "p",
+    2039
+   ],
+   "chromium::tests/swaglabs/functional/navigateMenu.spec.ts::Navigate menu items › should redirect to Login when navigating directly to a protected page after logout": [
+    "p",
+    2049
+   ]
+  }
  }
 ]
