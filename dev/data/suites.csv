@@ -1,3 +1,3 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","589","should redirect to the Products page on successful login","chromium","2026-09-27","passed","2026-09-27","Login","swaglabs/functional/login.spec.ts","",""
-"","1456","should log out, clear the session, and return to the Login page","chromium","2026-09-27","passed","2026-09-27","Navigate menu items","swaglabs/functional/navigateMenu.spec.ts","",""
+"","624","should redirect to the Products page on successful login","chromium","2026-09-27","passed","2026-09-27","Login","swaglabs/functional/login.spec.ts","",""
+"","1449","should log out, clear the session, and return to the Login page","chromium","2026-09-27","passed","2026-09-27","Navigate menu items","swaglabs/functional/navigateMenu.spec.ts","",""
