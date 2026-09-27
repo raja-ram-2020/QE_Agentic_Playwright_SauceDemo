@@ -25,11 +25,11 @@
     },
     "remoteUser": "pwuser",
     "mounts": [
-        "source=pw-scaffold-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
-        "source=pw-scaffold-claude-config-${devcontainerId},target=/home/pwuser/.claude,type=volume",
-        "source=pw-scaffold-npm-cache-${devcontainerId},target=/home/pwuser/.npm,type=volume",
-        "source=pw-scaffold-pw-cli-browsers-${devcontainerId},target=/ms-playwright-cli,type=volume",
-        "source=pw-scaffold-node-modules-${devcontainerId},target=/workspace/node_modules,type=volume",
+        "source=pw-agentic-framework-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+        "source=pw-agentic-framework-claude-config-${devcontainerId},target=/home/pwuser/.claude,type=volume",
+        "source=pw-agentic-framework-npm-cache-${devcontainerId},target=/home/pwuser/.npm,type=volume",
+        "source=pw-agentic-framework-pw-cli-browsers-${devcontainerId},target=/ms-playwright-cli,type=volume",
+        "source=pw-agentic-framework-node-modules-${devcontainerId},target=/workspace/node_modules,type=volume",
         "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/pwuser/.ssh,type=bind,readonly"
     ],
     "containerEnv": {

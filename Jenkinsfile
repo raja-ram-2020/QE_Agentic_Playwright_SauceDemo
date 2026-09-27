@@ -18,7 +18,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'pw-scaffold'
+        DOCKER_IMAGE = 'pw-agentic-framework'
     }
 
     options {
