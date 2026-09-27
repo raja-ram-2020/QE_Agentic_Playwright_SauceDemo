@@ -1,13 +1,13 @@
 ---
 name: enums
-description: TypeScript enum conventions for the Playwright scaffold — PascalCase enum names, SCREAMING_SNAKE_CASE members, location rules for app-specific (enums/{area}/) vs shared/utility (enums/util/) constants, and the rules for adding or extending enums. Use when adding a new UI route, message, role, storage-state path, or any repeated string constant defined by the application; when deciding whether a new value belongs in enums/, config/, or test-data/static/; or when extending an existing enum. For URLs and credentials use the config skill, for curated test input data use the data-strategy skill, and for editing existing enum values use the refactor-values skill.
+description: TypeScript enum conventions for the Playwright framework — PascalCase enum names, SCREAMING_SNAKE_CASE members, location rules for app-specific (enums/{area}/) vs shared/utility (enums/util/) constants, and the rules for adding or extending enums. Use when adding a new UI route, message, role, storage-state path, or any repeated string constant defined by the application; when deciding whether a new value belongs in enums/, config/, or test-data/static/; or when extending an existing enum. For URLs and credentials use the config skill, for curated test input data use the data-strategy skill, and for editing existing enum values use the refactor-values skill.
 ---
 
 # Enums
 
 ## Critical
 
-- **Convention: TypeScript `enum`** — the scaffold uses the language construct `enum`, not `as const` object literals. Stay consistent.
+- **Convention: TypeScript `enum`** — the framework uses the language construct `enum`, not `as const` object literals. Stay consistent.
 - **Enum name:** PascalCase (e.g., `Messages`, `Routes`, `Roles`).
 - **Enum member:** SCREAMING_SNAKE_CASE (e.g., `LOGIN_SUCCESS`, `INVENTORY`, `APP`).
 - **Location:** app-defined strings go in `enums/{area}/*.ts`; cross-app constants go in `enums/util/*.ts`. Do not invent a new top-level folder.
@@ -20,7 +20,7 @@ description: TypeScript enum conventions for the Playwright scaffold — PascalC
 
 > **`{area}` is a placeholder.** Before creating or referencing any path below, run `ls enums/` to discover the real subdirectory names in this repo (e.g., `front-office`, `back-office`) and use those instead.
 
-| Type                   | Directory       | Naming      | Scaffold examples                                                       |
+| Type                   | Directory       | Naming      | Framework examples                                                       |
 | ---------------------- | --------------- | ----------- | ----------------------------------------------------------------------- |
 | App-specific enums     | `enums/{area}/` | `[name].ts` | `Messages`, `Routes` (in `enums/app/app.ts`) |
 | Shared / utility enums | `enums/util/`   | `[name].ts` | `Roles` (in `enums/util/roles.ts`)                                      |
@@ -169,7 +169,7 @@ Fix: URLs are environment-dependent and belong in `config/` + `process.env.*` (s
 
 **TypeScript complains about `enum` in my linter config.**
 Cause: Some TS style guides discourage `enum` in favour of `as const` objects.
-Fix: The scaffold's convention is TypeScript `enum`. If the linter flags it, configure the lint rule to allow `enum` at the repo level rather than migrating one file.
+Fix: The framework's convention is TypeScript `enum`. If the linter flags it, configure the lint rule to allow `enum` at the repo level rather than migrating one file.
 
 ## See Also
 

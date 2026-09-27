@@ -2,7 +2,7 @@
 
 A page object that handles a CRUD operation must include feedback selectors. This is the canonical pattern.
 
-> `ProductsPage`, `Messages.PRODUCT_CREATED`, `Messages.PRODUCT_SAVE_FAILED`, and `Messages.NAME_REQUIRED` are **illustrative** — there is no `ProductsPage` in the scaffold today. Substitute your own page/class name and real enum members when following this pattern. The `Messages.*` values must be defined in `enums/{area}/*.ts` first (capture the exact rendered text with `playwright-cli`).
+> `ProductsPage`, `Messages.PRODUCT_CREATED`, `Messages.PRODUCT_SAVE_FAILED`, and `Messages.NAME_REQUIRED` are **illustrative** — there is no `ProductsPage` in the framework today. Substitute your own page/class name and real enum members when following this pattern. The `Messages.*` values must be defined in `enums/{area}/*.ts` first (capture the exact rendered text with `playwright-cli`).
 
 ## Pattern
 

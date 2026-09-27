@@ -1,13 +1,13 @@
 ---
 name: config
-description: Configuration and environment variable conventions for the Playwright scaffold — env file layout (env/.env.*), dotenv loading via playwright.config.ts and the ENVIRONMENT variable, config objects in config/app.ts and config/util/util.ts, and the rules for adding new env-driven values. Use when adding a new environment variable, a new config property, a new environment file, a new utility-service URL, or when a test/fixture needs to consume APP_URL / APP_EMAIL / APP_PASSWORD / UTILITY_URL. This skill owns URLs, credentials, and env-driven settings — for routes and other constants use the enums skill, and for process.env.* typing (non-null assertion vs fallback) use the type-safety skill.
+description: Configuration and environment variable conventions for the Playwright framework — env file layout (env/.env.*), dotenv loading via playwright.config.ts and the ENVIRONMENT variable, config objects in config/app.ts and config/util/util.ts, and the rules for adding new env-driven values. Use when adding a new environment variable, a new config property, a new environment file, a new utility-service URL, or when a test/fixture needs to consume APP_URL / APP_EMAIL / APP_PASSWORD / UTILITY_URL. This skill owns URLs, credentials, and env-driven settings — for routes and other constants use the enums skill, and for process.env.* typing (non-null assertion vs fallback) use the type-safety skill.
 ---
 
 # Configuration
 
 ## Critical
 
-- **NEVER** hardcode URLs, tokens, emails, or passwords anywhere in the scaffold. The only source of truth for env-driven values is `process.env.*`, backed by `env/.env.${environment}`.
+- **NEVER** hardcode URLs, tokens, emails, or passwords anywhere in the framework. The only source of truth for env-driven values is `process.env.*`, backed by `env/.env.${environment}`.
 - **NEVER** hardcode routes in `config/`. Routes belong in `enums/{area}/*` (see the `enums` skill).
 - **ALWAYS** add every new env variable to `env/.env.example` with a safe placeholder — no real secrets, no production URLs.
 - **ALWAYS** add a JSDoc comment on every config property describing the value and the backing env var.
@@ -52,7 +52,7 @@ Use this decision table before adding anything:
 | URL of a utility / third-party service                     | env var + `config/util/util.ts` (`utilityConfig.*`)                         |
 | Credential (email, password, API key, token seed)          | env var only — **do not** expose through a config object                    |
 | Route (e.g. `/login`)                                      | `enums/{area}/*` — **not** `config/` and **not** an env var                 |
-| Storage-state file path (if this scaffold ever persists a session) | `enums/{area}/*` — **not** `config/`. Not currently used — see the `helpers` skill. |
+| Storage-state file path (if this framework ever persists a session) | `enums/{area}/*` — **not** `config/`. Not currently used — see the `helpers` skill. |
 | Timeout / retry / workers tuning                           | `playwright.config.ts` — **not** `config/` unless reused outside Playwright |
 | Runtime selector (`ENVIRONMENT`, `CI`)                     | Shell-level env var only 
 
@@ -60,7 +60,7 @@ If the value fits none of the rows above, stop and ask — do not invent a new c
 
 ### Phase 3: Add the env var to `env/.env.example`
 
-Every env var the scaffold relies on must appear in the tracked template with a **safe placeholder**:
+Every env var the framework relies on must appear in the tracked template with a **safe placeholder**:
 
 ```
 APP_URL=https://your-app-url.com
@@ -79,7 +79,7 @@ Then add the real value to your active env file (`env/.env.dev` or similar) — 
 
 ### Phase 4: Add the config property (only if warranted) with JSDoc
 
-Not every env var gets a config-object slot. Credentials (`APP_EMAIL`, `APP_PASSWORD`, tokens) stay env-only. URLs and infra settings that the scaffold wants to document **do** go into a config object.
+Not every env var gets a config-object slot. Credentials (`APP_EMAIL`, `APP_PASSWORD`, tokens) stay env-only. URLs and infra settings that the framework wants to document **do** go into a config object.
 
 **`config/app.ts`** — app-facing URLs and settings:
 
@@ -115,7 +115,7 @@ Every property requires a JSDoc comment naming the backing env var.
 
 ### Phase 5: Consume the value from tests, fixtures, and helpers
 
-Two equally valid access patterns exist in the scaffold today:
+Two equally valid access patterns exist in the framework today:
 
 1. **Direct `process.env.*` access** — the dominant pattern in tests, fixtures, and helpers:
 

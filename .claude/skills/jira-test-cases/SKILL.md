@@ -42,7 +42,7 @@ sign off on it.
   the source, not missing coverage. Resist the pull to round out all five types for symmetry.
 - **Save to `test-scenarios/{area}/{summary_snake_case}_testcases.xlsx`.** `{summary}` is the
   Jira issue's own `summary` field, snake_cased (lowercase, non-alphanumerics → `_`). `{area}`
-  is resolved the same way as the rest of this scaffold — check `ls tests/` / `ls pages/`; if
+  is resolved the same way as the rest of this framework — check `ls tests/` / `ls pages/`; if
   the app has no area folder yet (new app under test), ask the human what to call it rather
   than guessing, since it becomes the standing folder name for everything that follows.
 - **This is upstream of, not the same as, `test-standards` Phase 0.** Phase 0's scenario matrix
@@ -150,6 +150,9 @@ from it in the same turn. Automation starts only once the human approves it, at 
 
 ## See Also
 
+- **`references/test-case-generator.md`** — a portable, tool-agnostic version of this workflow as a
+  standalone prompt (role/context/process/output-contract/constraints/example/self-check), for
+  use outside this skill (another AI tool, a teammate, documentation).
 - **`xlsx` skill** — how to build the workbook (formatting, save mechanics, gotchas).
 - **`test-standards` skill** — the Phase 0 human-approval gate this feeds into (different
   schema — see Critical).

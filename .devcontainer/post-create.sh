@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "=== Agentic Playwright Scaffold: Post-Create Setup ==="
+echo "=== Agentic Playwright Framework: Post-Create Setup ==="
 
 # Named volumes may be root-owned on first attach — fix before writing caches
 for dir in /ms-playwright-cli /home/pwuser/.npm /workspace/node_modules; do

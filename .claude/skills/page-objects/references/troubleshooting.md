@@ -7,8 +7,8 @@
 
 ## My locator-returning method signature is verbose or I'm splitting field declarations and constructor assignments for every element
 
-**Cause:** Using `readonly field + constructor assignment` for each locator — works identically to `get`, but fights the scaffold's style.
-**Fix:** Convert to `get submitButton(): Locator { return this.page.getByRole(...); }`. Both forms are correct (Playwright `Locator` is lazy), but the `get` form is the scaffold convention — terser and keeps locators grouped in the class body.
+**Cause:** Using `readonly field + constructor assignment` for each locator — works identically to `get`, but fights the framework's style.
+**Fix:** Convert to `get submitButton(): Locator { return this.page.getByRole(...); }`. Both forms are correct (Playwright `Locator` is lazy), but the `get` form is the framework convention — terser and keeps locators grouped in the class body.
 
 ## I tried `test.use()` to inject the page object and it didn't work
 

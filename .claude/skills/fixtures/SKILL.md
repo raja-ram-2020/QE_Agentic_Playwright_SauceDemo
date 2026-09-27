@@ -1,6 +1,6 @@
 ---
 name: fixtures
-description: Playwright fixture conventions for the Playwright scaffold — dependency-injection pattern, the single import point from fixtures/pom/test-options.ts (merged via mergeTests), the two fixture categories (page objects in fixtures/pom/, lifecycle setup/teardown in fixtures/helper/), and the workflow for adding a new fixture. Use when adding a new page object fixture, registering a new fixture category, extending FrameworkFixtures or HelperFixtures, or deciding whether a reusable piece of code should be a Playwright fixture. For plain (non-fixture) utility functions used from tests or fixtures use the helpers skill.
+description: Playwright fixture conventions for the Playwright framework — dependency-injection pattern, the single import point from fixtures/pom/test-options.ts (merged via mergeTests), the two fixture categories (page objects in fixtures/pom/, lifecycle setup/teardown in fixtures/helper/), and the workflow for adding a new fixture. Use when adding a new page object fixture, registering a new fixture category, extending FrameworkFixtures or HelperFixtures, or deciding whether a reusable piece of code should be a Playwright fixture. For plain (non-fixture) utility functions used from tests or fixtures use the helpers skill.
 ---
 
 # Fixtures and Dependency Injection
@@ -67,7 +67,7 @@ Registering a page object that was generated from guesses rather than observed U
 
 For most additions, you are **extending an existing file** — `page-object-fixture.ts` or `helper-fixture.ts`. A brand-new file is only needed when you're introducing a new fixture **category** (Phase 5).
 
-Scaffold of a standalone fixture file (used only for new categories):
+Framework of a standalone fixture file (used only for new categories):
 
 ```typescript
 // fixtures/[category]/[name]-fixture.ts

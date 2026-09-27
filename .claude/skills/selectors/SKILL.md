@@ -14,7 +14,7 @@ description: Selector strategy, exploration-first workflow, locator priority ord
 - If the app cannot be reached or auth fails, **stop and notify the human** — never ship placeholder locators with guessed names.
 - String values inside `getByText(...)` come from `enums/{area}/*` (e.g. `Messages.LOGIN_ERROR`). **Never** hardcode repeated UI strings. See the `enums` skill.
 - **Every page object covering forms or CRUD must include feedback / validation message selectors** — success, error, field validation, toast, loading, empty state as applicable. A page object without them is incomplete.
-- **Locators are `get` accessors returning `Locator`** — this is a style/readability convention in the scaffold. Playwright's `Locator` is lazy, so `get` and a `readonly` field set in the constructor behave identically at runtime.
+- **Locators are `get` accessors returning `Locator`** — this is a style/readability convention in the framework. Playwright's `Locator` is lazy, so `get` and a `readonly` field set in the constructor behave identically at runtime.
 
 ## Instructions
 
@@ -146,7 +146,7 @@ Every page object that covers a form or CRUD operation **must** include selector
 | Loading state        | During async operations                 | `getByRole('progressbar')` or `getByText('Loading...')`                |
 | Empty state          | When a list/table has no data           | `getByText('No items found')` or `getByRole('heading')` in empty state |
 
-> The `Messages.*` values shown above are **illustrative placeholders**. Use the real enum members from your scaffold's `enums/{area}/*.ts` (e.g. `Messages.LOGIN_SUCCESS`, `Messages.LOGIN_ERROR`, `Messages.REQUIRED_FIELD`). Capture the exact rendered text with `playwright-cli` first and encode it via the `enums` skill.
+> The `Messages.*` values shown above are **illustrative placeholders**. Use the real enum members from your framework's `enums/{area}/*.ts` (e.g. `Messages.LOGIN_SUCCESS`, `Messages.LOGIN_ERROR`, `Messages.REQUIRED_FIELD`). Capture the exact rendered text with `playwright-cli` first and encode it via the `enums` skill.
 
 For a full worked code example (page object class with form + feedback locators + action method, plus how the test asserts on it), see `references/feedback-selectors-example.md`.
 

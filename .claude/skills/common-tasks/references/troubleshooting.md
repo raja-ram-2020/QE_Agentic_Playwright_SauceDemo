@@ -45,6 +45,6 @@ Common pitfalls when using prompt templates from `common-tasks/SKILL.md`.
 
 **Fix:** Stop and read the `debugging` skill. It owns the failure-mode taxonomy (TimeoutError, strict-mode violation, network errors, etc.) and the right tool per failure (UI Mode `npm run test:ui`, Trace Viewer `npx playwright show-trace`, Inspector `npm run test:debug`). Do not loosen assertions, raise timeouts, or `try/catch` an `expect` to make the failure go away.
 
-## I'm onboarding to this scaffold and don't know how to work with the AI agent on it
+## I'm onboarding to this framework and don't know how to work with the AI agent on it
 
 **Fix:** Load the `ai-native-workflow` skill. It explains the three-layer model (orchestrator / specialized skills / code), the human↔agent conversation contract (audit-then-edit, when to ask vs do, when to refuse), the skill-routing matrix (which skill loads first for which intent), and the 8-phase task lifecycle (classify → route → explore → plan+confidence → human gate → apply → verify → report) that this skill's prompt templates plug into.

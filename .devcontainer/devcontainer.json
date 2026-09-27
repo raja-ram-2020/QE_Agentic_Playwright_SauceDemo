@@ -1,5 +1,5 @@
 {
-    "name": "Agentic Playwright Scaffold - AI-Assisted Development",
+    "name": "Agentic Playwright Framework - AI-Assisted Development",
     "build": {
         "dockerfile": "Dockerfile",
         "context": "..",

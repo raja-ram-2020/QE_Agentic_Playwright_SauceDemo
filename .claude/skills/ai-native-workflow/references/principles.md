@@ -1,6 +1,6 @@
-# Principles That Make the Scaffold AI-Native
+# Principles That Make the Framework AI-Native
 
-The scaffold is engineered so an LLM can reason from a small surface and produce consistent output. Five principles drive this.
+The framework is engineered so an LLM can reason from a small surface and produce consistent output. Five principles drive this.
 
 ## 1. Single Source of Truth for Every Value Class
 

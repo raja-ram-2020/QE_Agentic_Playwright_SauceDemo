@@ -1,6 +1,6 @@
 ---
 name: data-strategy
-description: Test data strategy for the Playwright scaffold — Faker factories for dynamic happy-path data, static TS files (`.ts` with `as const` exports — never `.json`) for domain-specific curated invalid sets, and the universal type-mismatch arrays in test-data/static/util/invalid-values.ts. Use when creating or editing a data factory, adding a new invalid-values dataset, deciding between factory / static / inline / enum for a new test value, writing data-driven tests, or updating existing static data. For safe edits to existing static values see the refactor-values skill; for TypeScript typing rules see the type-safety skill.
+description: Test data strategy for the Playwright framework — Faker factories for dynamic happy-path data, static TS files (`.ts` with `as const` exports — never `.json`) for domain-specific curated invalid sets, and the universal type-mismatch arrays in test-data/static/util/invalid-values.ts. Use when creating or editing a data factory, adding a new invalid-values dataset, deciding between factory / static / inline / enum for a new test value, writing data-driven tests, or updating existing static data. For safe edits to existing static values see the refactor-values skill; for TypeScript typing rules see the type-safety skill.
 ---
 
 # Data Strategy
@@ -108,7 +108,7 @@ Create a new `.ts` file here when you have a **curated** set of invalid or bound
 
 Two canonical shapes — pick whichever fits the call site:
 
-**Shape A — per-field invalid-value arrays** (the shape used by the scaffold's existing `test-data/static/app/invalidCredentials.ts`):
+**Shape A — per-field invalid-value arrays** (the shape used by the framework's existing `test-data/static/app/invalidCredentials.ts`):
 
 ```typescript
 export const INVALID_EMAILS = [

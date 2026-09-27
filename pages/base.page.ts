@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
 
 /**
- * Base class for all page objects in this scaffold. Holds only what is
+ * Base class for all page objects in this framework. Holds only what is
  * genuinely universal across every page, present and future -- never
  * page-specific or conditionally-shared UI. Elements that exist on some
  * pages but not others (e.g. the authenticated side menu) belong in a

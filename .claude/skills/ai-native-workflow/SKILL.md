@@ -1,6 +1,6 @@
 ---
 name: ai-native-workflow
-description: Sole entry-point router for AI-assisted work on this Playwright scaffold — owns the 8-phase main workflow (classify → route → explore → plan+confidence → human gate → apply → verify → report), the human↔agent conversation contract, the routing matrix that picks the right specialized skill, and the confidence-gate format that every non-trivial proposal must include. Use whenever a user starts a non-trivial task ("add tests for X", "create a page object", "rename this enum", "debug this failure", "refactor Y"), when onboarding to AI-assisted development on this scaffold, when planning a multi-step change that chains across several skills, or when the user asks "how should I work with AI here", "which skill for X?", "why is the agent doing Y?". This is the routing layer — load it first, then chain to the deep skill it points at.
+description: Sole entry-point router for AI-assisted work on this Playwright framework — owns the 8-phase main workflow (classify → route → explore → plan+confidence → human gate → apply → verify → report), the human↔agent conversation contract, the routing matrix that picks the right specialized skill, and the confidence-gate format that every non-trivial proposal must include. Use whenever a user starts a non-trivial task ("add tests for X", "create a page object", "rename this enum", "debug this failure", "refactor Y"), when onboarding to AI-assisted development on this framework, when planning a multi-step change that chains across several skills, or when the user asks "how should I work with AI here", "which skill for X?", "why is the agent doing Y?". This is the routing layer — load it first, then chain to the deep skill it points at.
 ---
 
 # AI-Native Workflow
@@ -74,7 +74,7 @@ Every Plan output before the human gate uses this shape:
 | "Convert `any` to a proper type"            | `type-safety`           | —                                                          |
 | "Add spec file / tag / structure question"  | `test-standards`        | `data-strategy`, `page-objects`                            |
 | "Create / improve / eval an agent skill"    | `skill-creator`         | `ai-native-workflow` (routing fit), this index            |
-| "How does this scaffold work with AI?"      | **this skill**          | relevant specialized skill                                |
+| "How does this framework work with AI?"      | **this skill**          | relevant specialized skill                                |
 
 > API-related intents (e.g. "Add tests for `POST /api/...`") are out of scope for this workspace's routing — only UI test automation is in use here. The `api-testing` skill has been removed entirely (see CLAUDE.md). If API work resumes, it needs to be authored fresh via `skill-creator`, then re-added as a row here.
 
@@ -116,6 +116,6 @@ Surface across multiple specialized skills — re-check before declaring done:
 - **`skill-creator`** — authoring/improving/evaluating the skills themselves (meta-work on this suite).
 - **`references/three-layer-model.md`** — how orchestrator / specialized skills / code conventions layer.
 - **`references/conversation-contract.md`** — audit-then-edit, when to ask vs do, when to refuse.
-- **`references/principles.md`** — the five principles that make the scaffold AI-native.
+- **`references/principles.md`** — the five principles that make the framework AI-native.
 - **`references/examples.md`** — three end-to-end multi-skill chains (page object + test, refactor, CI failure).
 - **`references/troubleshooting.md`** — common agent failure modes and fixes.

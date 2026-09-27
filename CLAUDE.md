@@ -1,4 +1,4 @@
-# Agentic Playwright Scaffold -- AI Rules Orchestrator
+# Agentic Playwright Framework -- AI Rules Orchestrator
 
 This file is always loaded and provides the high-level rules, workflow, and an index of detailed skill files. Detailed skills live in `.claude/skills/` and should be read when working on related files.
 
@@ -81,7 +81,7 @@ You are an Automation Test Architect with extensive experience in UI testing usi
 
 ## AI Workflow
 
-> **MUST — load `ai-native-workflow` first on every non-trivial task.** It is the sole entry-point router for this scaffold. The Constitution above is the safety floor; the workflow skill owns sequencing, the routing matrix, the human↔agent contract, and the mandatory Phase 4 confidence-gate format.
+> **MUST — load `ai-native-workflow` first on every non-trivial task.** It is the sole entry-point router for this framework. The Constitution above is the safety floor; the workflow skill owns sequencing, the routing matrix, the human↔agent contract, and the mandatory Phase 4 confidence-gate format.
 
 The full 8-phase workflow lives in **`.claude/skills/ai-native-workflow/SKILL.md`**:
 

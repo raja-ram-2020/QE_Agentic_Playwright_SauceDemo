@@ -1,4 +1,4 @@
-# The Scaffold's Three-Layer Model
+# The Framework's Three-Layer Model
 
 Read this once, then it's invisible.
 

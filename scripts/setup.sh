@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================
-# Agentic Playwright Scaffold - Local Development Setup
+# Agentic Playwright Framework - Local Development Setup
 # Detects OS and installs all dependencies.
 # Safe to run multiple times (idempotent).
 #
@@ -48,7 +48,7 @@ fi
 
 echo ""
 echo "=========================================="
-echo "  Agentic Playwright Scaffold - Local Setup"
+echo "  Agentic Playwright Framework - Local Setup"
 echo "  OS: $OS"
 echo "=========================================="
 

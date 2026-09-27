@@ -1,6 +1,6 @@
 ---
 name: helpers
-description: Plain utility function conventions for the Playwright scaffold — app-specific helpers in helpers/{area}/ and generic utilities in helpers/util/ (date formatting, string manipulation, parsing). Use when adding a reusable function that does NOT need the Playwright fixture lifecycle, or deciding whether a reusable piece of code belongs in helpers/ or fixtures/. For Playwright fixtures with setup/use/teardown lifecycle use the fixtures skill; for the env and enum sources of truth see the config and enums skills.
+description: Plain utility function conventions for the Playwright framework — app-specific helpers in helpers/{area}/ and generic utilities in helpers/util/ (date formatting, string manipulation, parsing). Use when adding a reusable function that does NOT need the Playwright fixture lifecycle, or deciding whether a reusable piece of code belongs in helpers/ or fixtures/. For Playwright fixtures with setup/use/teardown lifecycle use the fixtures skill; for the env and enum sources of truth see the config and enums skills.
 ---
 
 # Helpers
@@ -14,7 +14,7 @@ description: Plain utility function conventions for the Playwright scaffold — 
 - **NEVER** hardcode URLs, credentials, or tokens. Read env-driven values from `process.env.*` (see the `config` skill). Use `enums/{area}/*` for routes.
 - **Function naming:** camelCase verbs (`formatDate`, `parseCurrency`, `seedProduct`).
 - **Do not promote a helper to a helper fixture** unless the same setup/teardown is copy-pasted across **3+** spec files and needs guaranteed lifecycle (see the `fixtures` skill).
-- **No `helpers/` directory exists in this repo yet.** Auth today goes through `resetStorageState` + the login page object per test (see "How this scaffold handles auth" below) — there is no bootstrap helper to model a new one on. Confirm with `ls helpers/` before assuming a file exists.
+- **No `helpers/` directory exists in this repo yet.** Auth today goes through `resetStorageState` + the login page object per test (see "How this framework handles auth" below) — there is no bootstrap helper to model a new one on. Confirm with `ls helpers/` before assuming a file exists.
 
 ## File Locations
 
@@ -25,7 +25,7 @@ description: Plain utility function conventions for the Playwright scaffold — 
 | App helpers     | `helpers/{area}/` | App-specific helper functions (data seeding, request composition) | `helpers/app/seedProduct.ts` |
 | Utility helpers | `helpers/util/`   | Generic utility functions reusable across apps/projects   | `helpers/util/util.ts`  |
 
-## How this scaffold handles auth
+## How this framework handles auth
 
 There is no auth-bootstrap helper, no `auth.setup.ts`, and no persisted storage-state file in this repo. The real pattern, from `tests/swaglabs/functional/login.spec.ts`:
 
@@ -156,7 +156,7 @@ Fix: That's a fixture, not a helper. Route to the `fixtures` skill.
 
 **A test behaves as if logged out partway through.**
 Cause: `resetStorageState()` runs in `beforeEach` and clears cookies/permissions — if a later step in the same test needs to still be authenticated, it must call `loginPage.login(...)` again; there's no persisted session to fall back on.
-Fix: Re-check the test's own login call, not a setup file — this scaffold has no `auth.setup.ts` to investigate.
+Fix: Re-check the test's own login call, not a setup file — this framework has no `auth.setup.ts` to investigate.
 
 **I want to mutate `process.env` inside a new helper for convenience.**
 Fix: Don't. Pass values through return types or factory overrides instead — env mutation hides state and breaks parallel isolation.
@@ -169,7 +169,7 @@ Fix: Add an explicit return type (`Promise<void>`, `Promise<NewUser>`, `string`,
 
 ## See Also
 
-- **`fixtures`** skill — Playwright fixtures with `use()` lifecycle (setup / yield / teardown); the sibling category to helpers, and the rule of thumb for promoting to a helper fixture. Owns `resetStorageState`, the actual mechanism this scaffold uses for auth resets.
+- **`fixtures`** skill — Playwright fixtures with `use()` lifecycle (setup / yield / teardown); the sibling category to helpers, and the rule of thumb for promoting to a helper fixture. Owns `resetStorageState`, the actual mechanism this framework uses for auth resets.
 - **`config`** skill — env variable conventions (`process.env.*`), where `APP_URL` / `APP_EMAIL` / `APP_PASSWORD` live.
 - **`enums`** skill — `Routes.*` for routes.
 - **`data-strategy`** skill — Faker factories used inside seeding helpers; three-tier rule for static invalid data.

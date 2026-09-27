@@ -1,13 +1,13 @@
 ---
 name: page-objects
-description: Page Object Model pattern for the Playwright scaffold — class structure, get-accessor locator pattern, action-method conventions, component composition, registration via the page-object fixture, and the mandatory exploration-first workflow. Use when creating a new page object, adding or updating locators on an existing page object, adding a new reusable component, or registering a page in the fixture layer. For the locator priority order and feedback/validation-message rules see the selectors skill; for the terminal-only live-app exploration tool see the playwright-cli skill; for the DI wiring see the fixtures skill; for UI message strings and route enums see the enums skill.
+description: Page Object Model pattern for the Playwright framework — class structure, get-accessor locator pattern, action-method conventions, component composition, registration via the page-object fixture, and the mandatory exploration-first workflow. Use when creating a new page object, adding or updating locators on an existing page object, adding a new reusable component, or registering a page in the fixture layer. For the locator priority order and feedback/validation-message rules see the selectors skill; for the terminal-only live-app exploration tool see the playwright-cli skill; for the DI wiring see the fixtures skill; for UI message strings and route enums see the enums skill.
 ---
 
 # Page Object Model
 
 ## Critical
 
-- **Locators are `get` accessors** returning `Locator`. This is a style/readability convention — Playwright's `Locator` is lazy either way (it only queries the DOM when an action runs), so `get` vs `readonly` field behave identically at runtime. Use `get` for consistency with the rest of the scaffold.
+- **Locators are `get` accessors** returning `Locator`. This is a style/readability convention — Playwright's `Locator` is lazy either way (it only queries the DOM when an action runs), so `get` vs `readonly` field behave identically at runtime. Use `get` for consistency with the rest of the framework.
 - **Every page object extends `BasePage`** (`pages/base.page.ts`). Constructor is `constructor(page: Page) { super(page); ... }` — `super(page)` is always the first statement, explicit even when a class has nothing else to initialize (uniform shape across every page object, not just the ones that happen to need extra setup). `page` itself is declared `protected readonly` on `BasePage`, not redeclared per subclass.
 - **BasePage vs Component — the decision rule:** does **every** page object have this (present and future)? → it belongs on `BasePage`. Does only **some** pages have it (e.g. an authenticated-only side menu)? → it's a composed **component** (see Component composition below), never `BasePage`. Putting page-specific or conditionally-shared UI on `BasePage` means every other page inherits members that don't apply to it — present but meaningless, callable but guaranteed to time out. `BasePage` only ever holds `page` itself and genuinely page-agnostic behavior (get title, get URL, wait for load state).
 - **Page objects import `expect, Locator, Page` from `@playwright/test`** — never from `fixtures/pom/test-options.ts` (that's for spec files and fixtures).
@@ -25,7 +25,7 @@ description: Page Object Model pattern for the Playwright scaffold — class str
 
 > **`{area}` is a placeholder.** Before creating or referencing any path below, run `ls pages/` to discover the real subdirectory names in this repo (e.g., `front-office`, `back-office`) and use those instead.
 
-| Type         | Directory           | Naming                 | Scaffold example                                                                              |
+| Type         | Directory           | Naming                 | Framework example                                                                              |
 | ------------ | ------------------- | ---------------------- | ----------------------------------------------------------------------------------------------- |
 | Base class   | `pages/`            | `base.page.ts`         | `pages/base.page.ts` (`BasePage`) — one file, shared by every page object regardless of area |
 | Page objects | `pages/{area}/`     | `[name].page.ts`       | `pages/app/app.page.ts` (`AppPage`)                                |
@@ -34,7 +34,7 @@ description: Page Object Model pattern for the Playwright scaffold — class str
 ## BasePage
 
 `pages/base.page.ts` is the single class every page object extends. It exists to hold behavior that is
-genuinely universal — true for every page object this scaffold will ever have, not just the ones
+genuinely universal — true for every page object this framework will ever have, not just the ones
 that happen to need it today:
 
 ```typescript
@@ -125,10 +125,10 @@ Every page object that handles forms or CRUD operations must have three locator 
 
 ### Locators as getters
 
-Use `get accessor` returning `Locator`. Both `get` and `readonly field` work identically at runtime (Playwright's `Locator` is lazy), but `get` is the scaffold convention — terser, locators stay grouped in the class body, constructor stays focused on dependencies.
+Use `get accessor` returning `Locator`. Both `get` and `readonly field` work identically at runtime (Playwright's `Locator` is lazy), but `get` is the framework convention — terser, locators stay grouped in the class body, constructor stays focused on dependencies.
 
 ```typescript
-// PREFERRED -- the scaffold's convention
+// PREFERRED -- the framework's convention
 get submitButton(): Locator {
     return this.page.getByRole('button', { name: 'Submit' });
 }
