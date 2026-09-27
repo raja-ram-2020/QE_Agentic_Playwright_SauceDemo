@@ -296,4 +296,7 @@ Do not finish until the added/modified tests pass consistently. Do not suppress 
 - **`refactor-values`** skill — safe workflow for changing enum values or static data used in assertions.
 - **`debugging`** skill — failure-mode taxonomy and the right Playwright tool (UI Mode, Trace Viewer, Inspector) when a test fails or behaves unexpectedly during Phase 9 verification.
 - **`references/examples.md`** — four worked spec patterns (functional smoke, data-driven regression, destructive with cleanup, E2E multi-feature journey).
+- **`references/automation-generator-prompt.md`** — reusable orchestration prompt for converting
+  an approved test-case file (e.g. from `jira-test-cases`) into automated Playwright tests,
+  gated by the `ai-native-workflow` Phase 4 human-approval step.
 - **`references/troubleshooting.md`** — common test-standards pitfalls (`@functional`, tag arrays, wrong imports, hard waits, JSON data, manual instantiation, parallel collisions, destructive leaks, committed explore files).

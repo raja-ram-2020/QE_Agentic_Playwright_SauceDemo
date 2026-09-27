@@ -150,6 +150,9 @@ from it in the same turn. Automation starts only once the human approves it, at 
 
 ## See Also
 
+- **`references/test-case-generator.md`** — a portable, tool-agnostic version of this workflow as a
+  standalone prompt (role/context/process/output-contract/constraints/example/self-check), for
+  use outside this skill (another AI tool, a teammate, documentation).
 - **`xlsx` skill** — how to build the workbook (formatting, save mechanics, gotchas).
 - **`test-standards` skill** — the Phase 0 human-approval gate this feeds into (different
   schema — see Critical).
