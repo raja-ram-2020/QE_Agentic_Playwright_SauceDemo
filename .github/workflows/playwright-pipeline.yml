@@ -49,6 +49,8 @@ jobs:
     needs: deploy-dev
     runs-on: ubuntu-latest
     environment: dev
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -105,6 +107,21 @@ jobs:
           path: allure-report/
           retention-days: 30
 
+      - name: Publish Dev Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: dev
+          keep_files: true
+
+      - name: Add Allure report link to summary
+        if: always()
+        run: |
+          echo "### Allure Report (Dev)" >> "$GITHUB_STEP_SUMMARY"
+          echo "[View Report](https://raja-ram-2020.github.io/QE_Agentic_Playwright_SauceDemo/dev/)" >> "$GITHUB_STEP_SUMMARY"
+
   # ---- QA ----
   deploy-qa:
     name: Deploy to QA
@@ -120,6 +137,8 @@ jobs:
     needs: deploy-qa
     runs-on: ubuntu-latest
     environment: qa
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -176,6 +195,21 @@ jobs:
           path: allure-report/
           retention-days: 30
 
+      - name: Publish QA Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: qa
+          keep_files: true
+
+      - name: Add Allure report link to summary
+        if: always()
+        run: |
+          echo "### Allure Report (QA)" >> "$GITHUB_STEP_SUMMARY"
+          echo "[View Report](https://raja-ram-2020.github.io/QE_Agentic_Playwright_SauceDemo/qa/)" >> "$GITHUB_STEP_SUMMARY"
+
   # ---- Stage ----
   deploy-stage:
     name: Deploy to Stage
@@ -191,6 +225,8 @@ jobs:
     needs: deploy-stage
     runs-on: ubuntu-latest
     environment: stage
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -247,6 +283,21 @@ jobs:
           path: allure-report/
           retention-days: 30
 
+      - name: Publish Stage Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: stage
+          keep_files: true
+
+      - name: Add Allure report link to summary
+        if: always()
+        run: |
+          echo "### Allure Report (Stage)" >> "$GITHUB_STEP_SUMMARY"
+          echo "[View Report](https://raja-ram-2020.github.io/QE_Agentic_Playwright_SauceDemo/stage/)" >> "$GITHUB_STEP_SUMMARY"
+
   # ---- Prod ----
   deploy-prod:
     name: Deploy to Prod
@@ -263,6 +314,8 @@ jobs:
     needs: deploy-prod
     runs-on: ubuntu-latest
     environment: prod
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -318,6 +371,21 @@ jobs:
           name: prod-smoke-allure-report
           path: allure-report/
           retention-days: 30
+
+      - name: Publish Prod Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: prod
+          keep_files: true
+
+      - name: Add Allure report link to summary
+        if: always()
+        run: |
+          echo "### Allure Report (Prod)" >> "$GITHUB_STEP_SUMMARY"
+          echo "[View Report](https://raja-ram-2020.github.io/QE_Agentic_Playwright_SauceDemo/prod/)" >> "$GITHUB_STEP_SUMMARY"
 
   # ---- Summary ----
   summary:
