@@ -14,16 +14,16 @@ Actions:
 4. **Phase 5** — Fix the test setup to fill the required field first (or, if this case is supposed to surface the validation error, change the assertion to expect the validation error instead of the click to succeed).
 5. **Phase 6** — Re-run the file 5x.
 
-## Example 2: ZodError after a backend change
+## Example 2: `expect()` mismatch after a UI copy change
 
-> `ZodError: at body.data.role: Invalid enum value. Expected 'admin' | 'user', received 'administrator'`
+> `Expected: "Invalid email or password" / Received: "Incorrect email or password"`
 
 Actions:
 
-1. **Phase 1** — `Schema.parse(body)` failed at `data.role`.
-2. **Phase 2** — `ZodError` → contract drift.
-3. **Phase 4 (UI Mode → Network tab)** — the response shows `role: 'administrator'`. The OpenAPI spec is the source of truth; if the spec still says `'admin' | 'user'`, this is a backend bug.
-4. **Phase 5** — Per `api-testing` Phase 7: keep the test as the spec says, wrap with `test.skip` + `/* eslint-disable playwright/no-skipped-test */` + `// FIXME: <ticket-url>`. **Do not** loosen the schema. If the spec was updated to include `'administrator'`, update the enum and follow `refactor-values`.
+1. **Phase 1** — assertion mismatch on `Messages.CREDENTIALS_MISMATCH`.
+2. **Phase 2** — `expect()` mismatch → the app's UI text drifted from the enum value.
+3. **Phase 4 (UI Mode)** — replay the login flow and read the actual rendered error text via the locator picker.
+4. **Phase 5** — Confirm the new wording with `playwright-cli`, then update `Messages.CREDENTIALS_MISMATCH` via the `refactor-values` workflow so every consumer stays in sync — do not just patch the one failing assertion.
 5. **Phase 6** — Re-run.
 
 ## Example 3: Test passes alone, fails in suite
@@ -46,6 +46,6 @@ Actions:
 
 1. **Phase 7** — Download `playwright-report` and `test-results` artifacts from the CI run.
 2. `npx playwright show-trace path/to/trace.zip` — the trace shows `page.goto(process.env.APP_URL)` returned `connection refused` for the first 25 seconds.
-3. **Diagnosis** — CI's `auth.setup.ts` ran before the app container was ready. Local dev runs against an already-warm dev server.
-4. **Fix** — Add a brief readiness probe in `auth.setup.ts` (or wait for the CI orchestration to expose a "ready" signal). **Do not** raise `navigationTimeout` — that masks the real timing.
+3. **Diagnosis** — CI's app container wasn't ready when the first test's `beforeEach` called `page.goto`. Local dev runs against an already-warm dev server.
+4. **Fix** — Add a brief readiness probe before the suite runs (or wait for the CI orchestration to expose a "ready" signal). **Do not** raise `navigationTimeout` — that masks the real timing.
 5. **Phase 6** — Push the fix; verify the CI run is green.

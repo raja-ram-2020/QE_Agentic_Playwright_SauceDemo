@@ -3,7 +3,7 @@
 ## Test uses `{ tag: '@functional' }`
 
 **Cause:** `@functional` is not a valid tag.
-**Fix:** Replace with one of `@smoke` / `@sanity` / `@regression` / `@e2e` / `@api` — or `@destructive` if the test mutates shared state.
+**Fix:** Replace with one of `@smoke` / `@sanity` / `@regression` / `@e2e` — or `@destructive` if the test mutates shared state.
 
 ## Test uses `{ tag: ['@smoke', '@destructive'] }` or any other array
 

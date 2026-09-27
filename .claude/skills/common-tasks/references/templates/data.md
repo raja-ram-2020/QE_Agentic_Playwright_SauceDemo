@@ -8,7 +8,6 @@ Prompt templates for dynamic Faker factories and curated static test data. The `
 Create a data factory for [DATA TYPE]:
 - Location: test-data/factories/{area}/[name].factory.ts  (run `ls test-data/factories/` first)
 - Use @faker-js/faker for data generation
-- Validate output with Zod schema from fixtures/api/schemas/
 - Support overrides parameter for customization
 - Support seed option for reproducibility
 
@@ -19,7 +18,7 @@ Fields to generate:
 
 ## Add Static Test Data
 
-Before adding static data, pick the right tier per the three-tier rule (see the `api-testing` skill, Phase 6, and the `data-strategy` skill):
+Before adding static data, pick the right tier per the three-tier rule (see the `data-strategy` skill):
 
 1. **Universal type-mismatch arrays** (wrong type for any field of a given primitive type) → already centralised in `test-data/static/util/invalid-values.ts`. Import from there; do not create new ones.
 2. **Domain-specific curated invalid values** (invalid email formats, password policy violations, invalid locales, forbidden enum values, etc.) → live under `test-data/static/{area}/` — this is the tier a new static file usually belongs to.

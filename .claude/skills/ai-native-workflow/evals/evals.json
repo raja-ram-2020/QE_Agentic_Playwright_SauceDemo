@@ -4,8 +4,8 @@
         {
             "id": 0,
             "name": "codegen-complete-info",
-            "prompt": "Add API tests for POST /api/auth/login. The OpenAPI spec lives at docs/openapi.yml. Area folder is front-office. Cover all status codes the spec lists.",
-            "expected_output": "Phase 4 confidence block with score >=8, routes to api-testing first, chains to data-strategy/enums/type-safety, no premature edits, asks human gate before applying.",
+            "prompt": "Create a page object for the /admin dashboard page. Area folder is front-office. playwright-cli is installed and the app is reachable at the URL in .env.",
+            "expected_output": "Phase 4 confidence block with score >=8, routes to page-objects first, chains to selectors/playwright-cli/enums/fixtures, explores the live page via playwright-cli before writing selectors, no premature edits, asks human gate before applying.",
             "files": [],
             "assertions": [
                 {
@@ -21,8 +21,12 @@
                     "text": "Both Rationale and Unknowns lines present in proposal"
                 },
                 {
-                    "id": "first_skill_api_testing",
-                    "text": "References api-testing skill as first skill loaded"
+                    "id": "first_skill_page_objects",
+                    "text": "References page-objects skill as first skill loaded"
+                },
+                {
+                    "id": "explores_via_playwright_cli",
+                    "text": "Proposes or performs live exploration via playwright-cli before proposing selectors"
                 },
                 {
                     "id": "stops_at_human_gate",
@@ -37,13 +41,13 @@
         {
             "id": 1,
             "name": "codegen-missing-area",
-            "prompt": "Add tests for the login API endpoint.",
-            "expected_output": "Asks the user for area folder + spec source. Does NOT emit Phase 4 with confidence <5, does NOT invent front-office or any area name.",
+            "prompt": "Add tests for the login page.",
+            "expected_output": "Asks the user for the area folder (and any other missing primary input). Does NOT emit Phase 4 with confidence <5, does NOT invent front-office or any area name.",
             "files": [],
             "assertions": [
                 {
                     "id": "asks_clarifying_question",
-                    "text": "Output contains an explicit question to the user about area folder, endpoint path, or spec source"
+                    "text": "Output contains an explicit question to the user about area folder or which page/flow is meant"
                 },
                 {
                     "id": "no_phase4_when_under_confidence_floor",
@@ -55,7 +59,7 @@
                 },
                 {
                     "id": "no_premature_codegen",
-                    "text": "Does not start writing test code, schemas, or factories"
+                    "text": "Does not start writing page object or test code"
                 },
                 {
                     "id": "cites_ask_rule",
@@ -65,37 +69,37 @@
         },
         {
             "id": 2,
-            "name": "codegen-missing-source",
-            "prompt": "Test the user signup endpoint. It returns 201 on success.",
-            "expected_output": "Asks for OpenAPI / Swagger source first. Does NOT jump to live HTTP exploration. Does NOT invent endpoint path, request body shape, or response schema.",
+            "name": "api-intent-out-of-scope",
+            "prompt": "Add API tests for POST /api/auth/login. The OpenAPI spec lives at docs/openapi.yml.",
+            "expected_output": "Flags that API testing intents are out of scope for this workspace's routing table (per the routing-table note), does not silently route to an api-testing skill or generate API test code, and asks the user how they want to proceed (e.g. confirm this is still wanted, or redirect to the UI-equivalent flow).",
             "files": [],
             "assertions": [
                 {
-                    "id": "asks_for_spec_source",
-                    "text": "Asks for OpenAPI / Swagger documentation location before doing anything else"
+                    "id": "flags_out_of_scope",
+                    "text": "Output explicitly states that API testing is out of scope / not routed for this workspace"
                 },
                 {
-                    "id": "no_invented_endpoint_path",
-                    "text": "Does not assume a specific endpoint path like /api/users or /api/signup without confirmation"
+                    "id": "no_api_testing_route",
+                    "text": "Does not treat api-testing as a normal first-skill route or proceed as if it were still wired in"
                 },
                 {
-                    "id": "no_invented_request_body",
-                    "text": "Does not invent field names for the signup request body"
+                    "id": "asks_how_to_proceed",
+                    "text": "Asks the user for direction instead of silently defaulting or silently refusing"
                 },
                 {
-                    "id": "live_http_only_as_fallback",
-                    "text": "If proposing live HTTP, frames it as fallback for when no spec exists, not the primary approach"
+                    "id": "no_premature_codegen",
+                    "text": "Does not generate test files, schemas, or factories"
                 },
                 {
-                    "id": "no_phase4_yet",
-                    "text": "Does not emit a full Phase 4 Proposal block before getting the spec source"
+                    "id": "no_invented_paths",
+                    "text": "Does not invent folder names, endpoint paths, or schema fields"
                 }
             ]
         },
         {
             "id": 3,
             "name": "refactor-cascading-rename",
-            "prompt": "Rename the value of ApiEndpoints.LOGIN from /auth/login to /v2/auth/login.",
+            "prompt": "Rename the value of Routes.INVENTORY from /inventory.html to /catalog.html.",
             "expected_output": "Loads refactor-values skill, runs impact-grep across enums/, fixtures/, tests/, helpers/ before proposing edits. Phase 4 includes affected file list as evidence.",
             "files": [],
             "assertions": [
@@ -105,7 +109,7 @@
                 },
                 {
                     "id": "impact_grep_first",
-                    "text": "Performs an impact analysis (grep / search) for ApiEndpoints.LOGIN call sites BEFORE proposing edits"
+                    "text": "Performs an impact analysis (grep / search) for Routes.INVENTORY call sites BEFORE proposing edits"
                 },
                 {
                     "id": "phase4_lists_affected_files",
@@ -124,7 +128,7 @@
         {
             "id": 4,
             "name": "debug-flaky-test",
-            "prompt": "This test is flaky in CI: tests/front-office/api/login.spec.ts. It passes locally but fails about 1 in 5 runs in CI with a TimeoutError on expect(loginResponse).toBeOK(). Fix it.",
+            "prompt": "This test is flaky in CI: tests/front-office/functional/login.spec.ts. It passes locally but fails about 1 in 5 runs in CI with a TimeoutError on expect(page.getByRole('alert')).toBeVisible(). Fix it.",
             "expected_output": "Loads debugging skill. Investigates root cause via trace/CI artifacts. Does NOT bump timeouts. Does NOT add page.waitForTimeout. Distinguishes test bug vs product bug. Considers test.skip + FIXME if confirmed product bug.",
             "files": [],
             "assertions": [

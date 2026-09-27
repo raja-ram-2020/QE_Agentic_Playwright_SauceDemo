@@ -15,18 +15,18 @@ User says: _"Add a page object and a functional smoke test for the settings page
 7. **Phase 7 — Verify** — Walk the verification checklist; run `npx playwright test tests/{area}/functional/settings.spec.ts`.
 8. **Phase 8 — Report + commit** — _"Add SettingsPage page object and @smoke functional test"_.
 
-## Example 2: Add complete API coverage for a new endpoint
+## Example 2: Add a data-driven negative test using static data
 
-User says: _"Add API tests for `POST /api/products`."_
+User says: _"Add negative tests for the login form covering every invalid-credential combination we have."_
 
-1. **Phase 1 — Classify** — Codegen, two artifacts (Zod schema + API spec file).
-2. **Phase 2 — Route** — `common-tasks` (templates) → `api-testing` + `type-safety` (deep rules).
-3. **Phase 3 — Explore** — `ls fixtures/api/schemas/`, `ls tests/`, `ls enums/`. Source contract from OpenAPI / Swagger; only fall back to live-HTTP exploration if no documentation exists.
-4. **Phase 4 — Plan + Confidence** — Copy **Create a New Zod Schema (From Documentation)** + **Add API Test** templates. Build coverage plan listing every status code from the spec for this endpoint, stating what test will cover each. Present plan before generating code.
-5. **Phase 5 — Human gate** — Confirm coverage plan.
-6. **Phase 6 — Apply** — Follow `api-testing` Phases 1–8 (contract → schema → happy path → `test.step` → full status-code matrix → per-field negative coverage with `INVALID_STRING_VALUES` / `INVALID_NUMBER_VALUES` from `test-data/static/util/invalid-values.ts` → behavior-mismatch protocol → helper fixture if reused). Apply Critical: `z.strictObject()`, `expect(Schema.parse(body)).toBeTruthy()`, `ApiEndpoints.*`, `process.env.*`, `@api` tag.
-7. **Phase 7 — Verify** — Walk the verification checklist with particular attention to coverage-audit and auth-matrix boxes. Run the new spec; any remaining red is a bug → `api-testing` Phase 7 (`test.skip` + `// FIXME:`).
-8. **Phase 8 — Report + commit** — _"Add POST /api/products tests with full coverage matrix"_.
+1. **Phase 1 — Classify** — Codegen, one artifact (data-driven functional test) plus a possible static-data addition.
+2. **Phase 2 — Route** — `common-tasks` (templates) → `test-standards` + `data-strategy` (deep rules).
+3. **Phase 3 — Explore** — `ls tests/`, `ls test-data/static/`. Confirm `INVALID_LOGIN_ATTEMPTS` (or equivalent) already exists in `test-data/static/{area}/`; if not, draft it per the `data-strategy` three-tier rule.
+4. **Phase 4 — Plan + Confidence** — Copy the **Add Data-Driven Tests** template; fill in the static-data file and scenario list. Output Confidence + Unknowns.
+5. **Phase 5 — Human gate** — Confirm.
+6. **Phase 6 — Apply** — Loop `for...of` outside the `test()` block, one test per row, `@regression` tag, assert against `Messages.*` enum values (never hardcoded strings).
+7. **Phase 7 — Verify** — Walk the verification checklist; run `npx playwright test tests/{area}/functional/login.spec.ts`.
+8. **Phase 8 — Report + commit** — _"Add data-driven negative login tests from static invalid-credential set"_.
 
 ## Example 3: Add a destructive test (shared/global state)
 
@@ -36,7 +36,7 @@ This mutates **shared/global** state — the locale is read by every other test/
 
 1. **Phase 1 — Classify** — Codegen (functional test; factory only if dynamic content values are needed).
 2. **Phase 2 — Route** — `common-tasks` (templates) → `test-standards` (Phase 7 destructive rules); `fixtures` / `helpers` only if the locale setup/reset will be reused across 3+ files.
-3. **Phase 3 — Explore** — `ls tests/`, confirm the locale enum/setting and the reset path (the endpoint or UI control that restores the default locale).
+3. **Phase 3 — Explore** — `ls tests/`, confirm the locale enum/setting and the reset path (the admin UI control that restores the default locale).
 4. **Phase 4 — Plan + Confidence** — Copy the **Create a Functional Test** template. Output Confidence + Unknowns.
 5. **Phase 5 — Human gate** — Confirm.
 6. **Phase 6 — Apply** — Single `@destructive` tag (overrides any other importance tag — `@destructive` is heaviest and wins), no hardcoded strings. Wire `afterEach` / `afterAll` cleanup that **restores the default locale** even on failure.

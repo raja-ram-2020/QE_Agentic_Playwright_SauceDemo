@@ -15,17 +15,10 @@ Reproduce this table in your working notes (not necessarily in the final report)
 | 2                              | No `new PageObject(page)` in tests — page objects come from fixtures                                                                            | 🔴               |         |          |
 | **Type safety**                |
 | 3                              | No `any` type anywhere in the diff                                                                                                              | 🔴               |         |          |
-| 4                              | API schemas use `z.strictObject()`, never `z.object()`                                                                                          | 🔴               |         |          |
-| 5                              | Schema mirrors the documented contract — no loosening (`.optional`/`.nullable`/`.passthrough`/widened types) added to swallow runtime surprises | 🔴               |         |          |
 | 6                              | Exported functions have explicit return types                                                                                                   | 🟠               |         |          |
 | 7                              | `process.env.*` uses a sanctioned pattern (`!` or `?? fallback`), values declared in `env/.env.example`                                         | 🟠               |         |          |
-| **API tests**                  |
-| 8                              | Response asserted exactly as `expect(SchemaName.parse(body)).toBeTruthy();`                                                                     | 🔴               |         |          |
-| 9                              | Any test with 2+ API calls wraps each call in its own `test.step()`                                                                             | 🔴               |         |          |
-| 10                             | Every status code in the spec has a test — passing, failing, or `test.skip` + `// FIXME: <ticket>` (no silent coverage drops)                   | 🔴               |         |          |
-| 11                             | 400 tests do per-field omission + invalid-type `for...of` loops — not empty-body-only                                                           | 🟠               |         |          |
 | **Sources of truth**           |
-| 12                             | URLs/credentials from `process.env.*`; endpoint paths, routes, UI strings, storage-state paths from `enums/*` / `config/*` — nothing hardcoded  | 🔴               |         |          |
+| 12                             | URLs/credentials from `process.env.*`; routes, UI strings, storage-state paths from `enums/*` / `config/*` — nothing hardcoded                  | 🔴               |         |          |
 | 13                             | Repeated string values use enums, not inline literals                                                                                           | 🟡               |         |          |
 | 14                             | Existing enum value / `test-data/static` value changes followed the `refactor-values` impact analysis (no stale references)                     | 🔴               |         |          |
 | **Selectors & POM** (UI diffs) |

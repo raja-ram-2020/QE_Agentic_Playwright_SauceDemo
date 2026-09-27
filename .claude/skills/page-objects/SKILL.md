@@ -1,7 +1,6 @@
 ---
 name: page-objects
-description: Page Object Model pattern for the Playwright scaffold — class structure, get-accessor locator pattern, action-method conventions, component composition, registration via the page-object fixture, and the mandatory exploration-first workflow. Use when creating a new page object, adding or updating locators on an existing page object, adding a new reusable component, or registering a page in the fixture layer. For the locator priority order and feedback/validation-message rules see the selectors skill; for the terminal-only live-app exploration tool see the playwright-cli skill; for the DI wiring see the fixtures skill; for UI message strings and endpoint enums see the enums skill.
-author: Ivan Davidov
+description: Page Object Model pattern for the Playwright scaffold — class structure, get-accessor locator pattern, action-method conventions, component composition, registration via the page-object fixture, and the mandatory exploration-first workflow. Use when creating a new page object, adding or updating locators on an existing page object, adding a new reusable component, or registering a page in the fixture layer. For the locator priority order and feedback/validation-message rules see the selectors skill; for the terminal-only live-app exploration tool see the playwright-cli skill; for the DI wiring see the fixtures skill; for UI message strings and route enums see the enums skill.
 ---
 
 # Page Object Model
@@ -255,8 +254,7 @@ The `nav: NavigationComponent` field is a component, not a locator, so the JSDoc
 Before writing any code:
 
 - Run `ls pages/` to resolve `{area}` (e.g. `app`, `front-office`, `back-office`). Do not guess.
-- Identify which enums the page needs (`Messages`, `ApiEndpoints`, `Roles`, etc.). If a required enum member does not yet exist, extend it via the `enums` skill **first** — verify UI text with `playwright-cli` before encoding it.
-- Confirm the scaffold has a matching schema (for pages that trigger API calls you need to wait for / assert on) via `ls fixtures/api/schemas/`; if missing, create it via the `api-testing` skill.
+- Identify which enums the page needs (`Messages`, `Routes`, `Roles`, etc.). If a required enum member does not yet exist, extend it via the `enums` skill **first** — verify UI text with `playwright-cli` before encoding it.
 
 ### Phase 2: Explore the live application (mandatory)
 
@@ -348,9 +346,8 @@ test('should show error on bad login', async ({ appPage }) => {
 - **`selectors`** skill — exploration-first workflow (4 steps), selector priority order, feedback/validation message rules, forbidden patterns.
 - **`playwright-cli`** skill — the terminal-only live-app exploration tool (no IDE browser MCP substitutes).
 - **`fixtures`** skill — full DI rules, `FrameworkFixtures` / `HelperFixtures`, `mergeTests`, Built-in Fixtures table.
-- **`enums`** skill — where `Messages.*`, `ApiEndpoints.*`, `Roles`, `StorageStatePaths` live; how to add new values with live-text verification.
+- **`enums`** skill — where `Messages.*`, `Routes.*`, `Roles` live; how to add new values with live-text verification.
 - **`common-tasks`** skill — prompt templates for "Add a New Page Object (With / Without Exploration)" and "Add Locators to Existing Page".
-- **`api-testing`** skill — helper fixtures and factories used from page-object tests.
 - **`debugging`** skill — when a test using this page object fails, classify the failure (TimeoutError on action, locator returned multiple, etc.) and use the right tool to investigate before changing the page object.
 - **`references/examples.md`** — three end-to-end walkthroughs (new page, locator addition, component extraction).
 - **`references/troubleshooting.md`** — common page-object pitfalls and their fixes.

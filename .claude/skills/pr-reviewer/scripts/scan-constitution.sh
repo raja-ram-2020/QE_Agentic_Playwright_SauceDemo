@@ -92,10 +92,6 @@ echo
 report "🔴" "[3] no 'any' type" \
     "$(g ':\s*any\b|<any>|as any|Array<any>|: any\[\]' "${TS_FILES[@]:-}")"
 
-# [4] strict schemas — z.object( is forbidden in schema files
-report "🔴" "[4] z.strictObject (no z.object)" \
-    "$(g '\bz\.object\(' "${TS_FILES[@]:-}")"
-
 # [20] no hard waits
 report "🔴" "[20] no waitForTimeout / hard waits" \
     "$(g 'waitForTimeout' "${TS_FILES[@]:-}")"
@@ -121,10 +117,10 @@ report "🔴" "[2] no 'new XxxPage()/XxxComponent()' in specs" \
 # [25] forbidden @functional tag, and tags on describe
 report "🔴" "[25] no @functional tag" \
     "$(g '@functional' "${TS_FILES[@]:-}")"
-# Only the six canonical Constitution tags — repo-specific area tags are not
+# Only the five canonical Constitution tags — repo-specific area tags are not
 # part of the contract and must not be hardcoded here.
 report "🔴" "[25] no tag on test.describe()" \
-    "$(g "describe\([^)]*@(smoke|sanity|regression|e2e|api|destructive)" "${TS_FILES[@]:-}")"
+    "$(g "describe\([^)]*@(smoke|sanity|regression|e2e|destructive)" "${TS_FILES[@]:-}")"
 
 # [23] static data must be .ts, never .json
 if [[ ${#STATIC_JSON[@]} -gt 0 ]]; then
@@ -141,14 +137,7 @@ soft_report "🟡" "[21] possible magic-number timeout" \
 
 # [12] hardcoded http(s) URL literal (should come from env/config)
 soft_report "🟡" "[12] possible hardcoded URL (should be env/config)" \
-    "$(g "(baseUrl|url|apiUrl)\s*:\s*['\"]https?://" "${TS_FILES[@]:-}")"
-
-# [8] response assertion shape — informational: list Schema.parse() calls so the
-# reviewer can confirm each is the `expect(Schema.parse(body)).toBeTruthy()` form.
-# Exclude JSON.parse — that's deserialization, not schema validation.
-PARSE_HITS="$(g '\.parse\(' "${SPEC_FILES[@]:-}" | grep -vE '\bJSON\.parse\(' || true)"
-echo "ℹ️  [8] Schema.parse() call sites (verify each is expect(...).toBeTruthy()):"
-[[ -n "${PARSE_HITS// }" ]] && echo "${PARSE_HITS}" | sed 's/^/      /' || echo "      (none)"
+    "$(g "(baseUrl|url|appUrl)\s*:\s*['\"]https?://" "${TS_FILES[@]:-}")"
 
 echo
 if [[ $FAIL -eq 0 ]]; then

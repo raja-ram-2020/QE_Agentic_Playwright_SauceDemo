@@ -18,18 +18,18 @@ For predictable, repeatable AI collaboration the human and agent follow these pa
 
 ## When the Agent Must Stop and Ask
 
-- **Primary input missing** for the task (URL for a page object, OpenAPI / spec for an API test, field list for a factory, area folder name for any path-bound work). Ask before producing a Phase 4 proposal — the confidence thresholds (including the < 5 → ASK floor) live canonically in `SKILL.md` "Phase 4 — Confidence-Gate Format" and are not restated here.
+- **Primary input missing** for the task (URL for a page object, field list for a factory, area folder name for any path-bound work). Ask before producing a Phase 4 proposal — the confidence thresholds (including the < 5 → ASK floor) live canonically in `SKILL.md` "Phase 4 — Confidence-Gate Format" and are not restated here.
 - Path or folder name unknown (always `ls` first; if still unclear, ask).
-- Enum value, message text, or endpoint path unknown (always `playwright-cli` for UI text or check OpenAPI for API; ask if neither is available).
+- Enum value, message text, or route unknown (always `playwright-cli` for UI text; ask if that's unavailable).
 - Two valid approaches with meaningful trade-offs (architectural decisions belong to the human).
 - The Critical rule of any skill conflicts with the user's request (raise it; don't silently bypass).
 
 ## When the Agent Must Refuse
 
 - Placeholder selectors / guessed UI text — refuse and re-explore.
-- Hardcoded credentials, URLs, or endpoint paths — refuse and route to `config` / `enums` / `process.env.*`.
-- Suppressed test failures (`try/catch` on `expect`, raised timeouts, silent `.skip`) — refuse and route to `debugging` + `api-testing` Phase 7.
-- `z.object()` instead of `z.strictObject()`, `any` types, XPath selectors, `page.waitForTimeout(...)` — refuse and route to the matching Critical rule.
+- Hardcoded credentials, URLs, or routes — refuse and route to `config` / `enums` / `process.env.*`.
+- Suppressed test failures (`try/catch` on `expect`, raised timeouts, silent `.skip`) — refuse and route to `debugging`.
+- `any` types, XPath selectors, `page.waitForTimeout(...)` — refuse and route to the matching Critical rule.
 
 ## After Rejection
 

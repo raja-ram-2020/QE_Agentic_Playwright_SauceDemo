@@ -1,7 +1,6 @@
 ---
 name: config
-description: Configuration and environment variable conventions for the Playwright scaffold — env file layout (env/.env.*), dotenv loading via playwright.config.ts and the ENVIRONMENT variable, config objects in config/app.ts and config/util/util.ts, and the rules for adding new env-driven values. Use when adding a new environment variable, a new config property, a new environment file, a new utility-service URL, or when a test/fixture needs to consume APP_URL / API_URL / APP_EMAIL / APP_PASSWORD / UTILITY_URL. This skill owns URLs, credentials, and env-driven settings — for endpoint paths and route constants use the enums skill, and for process.env.* typing (non-null assertion vs fallback) use the type-safety skill.
-author: Ivan Davidov
+description: Configuration and environment variable conventions for the Playwright scaffold — env file layout (env/.env.*), dotenv loading via playwright.config.ts and the ENVIRONMENT variable, config objects in config/app.ts and config/util/util.ts, and the rules for adding new env-driven values. Use when adding a new environment variable, a new config property, a new environment file, a new utility-service URL, or when a test/fixture needs to consume APP_URL / APP_EMAIL / APP_PASSWORD / UTILITY_URL. This skill owns URLs, credentials, and env-driven settings — for routes and other constants use the enums skill, and for process.env.* typing (non-null assertion vs fallback) use the type-safety skill.
 ---
 
 # Configuration
@@ -9,7 +8,7 @@ author: Ivan Davidov
 ## Critical
 
 - **NEVER** hardcode URLs, tokens, emails, or passwords anywhere in the scaffold. The only source of truth for env-driven values is `process.env.*`, backed by `env/.env.${environment}`.
-- **NEVER** hardcode endpoint paths or route strings in `config/`. Paths belong in `enums/{area}/*` (see the `enums` skill).
+- **NEVER** hardcode routes in `config/`. Routes belong in `enums/{area}/*` (see the `enums` skill).
 - **ALWAYS** add every new env variable to `env/.env.example` with a safe placeholder — no real secrets, no production URLs.
 - **ALWAYS** add a JSDoc comment on every config property describing the value and the backing env var.
 - **ALWAYS** keep app-facing URLs/settings in `config/app.ts` and utility/third-party services in `config/util/util.ts`. Do not create ad-hoc config files elsewhere.
@@ -52,10 +51,10 @@ Use this decision table before adding anything:
 | URL of the main app under test                             | env var + `config/app.ts` (`appConfig.appUrl`, `apiUrl`)                    |
 | URL of a utility / third-party service                     | env var + `config/util/util.ts` (`utilityConfig.*`)                         |
 | Credential (email, password, API key, token seed)          | env var only — **do not** expose through a config object                    |
-| Endpoint path (e.g. `/api/users`) or route (e.g. `/login`) | `enums/{area}/*` — **not** `config/` and **not** an env var                 |
-| Storage-state file path                                    | `enums/{area}/*` (e.g. `StorageStatePaths`) — **not** `config/`             |
+| Route (e.g. `/login`)                                      | `enums/{area}/*` — **not** `config/` and **not** an env var                 |
+| Storage-state file path (if this scaffold ever persists a session) | `enums/{area}/*` — **not** `config/`. Not currently used — see the `helpers` skill. |
 | Timeout / retry / workers tuning                           | `playwright.config.ts` — **not** `config/` unless reused outside Playwright |
-| Runtime selector (`ENVIRONMENT`, `CI`)                     | Shell-level env var only — **not** `.env.example`                           |
+| Runtime selector (`ENVIRONMENT`, `CI`)                     | Shell-level env var only 
 
 If the value fits none of the rows above, stop and ask — do not invent a new config file.
 
@@ -65,7 +64,6 @@ Every env var the scaffold relies on must appear in the tracked template with a 
 
 ```
 APP_URL=https://your-app-url.com
-API_URL=https://your-api-url.com
 APP_EMAIL=your-email@example.com
 APP_PASSWORD=your-secure-password
 UTILITY_URL=https://your-utility-service.com
@@ -90,13 +88,11 @@ Not every env var gets a config-object slot. Credentials (`APP_EMAIL`, `APP_PASS
  * Application configuration object.
  * Contains URL configuration for the main application.
  *
- * For route paths and API endpoints, use enums from `enums/app/app.ts`.
+ * For route paths and UI message strings, use enums from `enums/{area}/*`.
  */
 export const appConfig = {
     /** Frontend application URL loaded from APP_URL env variable */
     appUrl: process.env.APP_URL,
-    /** Backend API URL loaded from API_URL env variable */
-    apiUrl: process.env.API_URL,
 };
 ```
 
@@ -107,7 +103,7 @@ export const appConfig = {
  * Utility service configuration object.
  * Contains URL configuration for utility/helper services.
  *
- * For API endpoints, use enums from `enums/` folder.
+ * For route paths and UI message strings, use enums from `enums/`.
  */
 export const utilityConfig = {
     /** Utility service base URL */
@@ -124,9 +120,8 @@ Two equally valid access patterns exist in the scaffold today:
 1. **Direct `process.env.*` access** — the dominant pattern in tests, fixtures, and helpers:
 
     ```typescript
-    baseUrl: process.env.API_URL,
-    headers: process.env.ACCESS_TOKEN,
-    body: { email: process.env.APP_EMAIL, password: process.env.APP_PASSWORD },
+    email: process.env.APP_EMAIL,
+    password: process.env.APP_PASSWORD,
     ```
 
 2. **Config-object access** — used when you want to import a documented, organized surface:
@@ -190,17 +185,13 @@ Fix: Confirm the key exists in `env/.env.${ENVIRONMENT}` (default `env/.env.dev`
 Cause: `ENVIRONMENT` is unset, misspelled, or points at a missing file.
 Fix: `playwright.config.ts` defaults to `dev`. Set `ENVIRONMENT=staging` in the shell (not in an `.env` file) before running tests; confirm `env/.env.staging` exists.
 
-**I can't find `ACCESS_TOKEN` / `ACCESS_TOKEN_ZERO` in `env/.env.example`.**
-Cause: These tokens are populated dynamically by an auth-bootstrap helper, not committed.
-Fix: In the scaffold's demo setup, an auth-bootstrap helper under `helpers/{area}/` logs in and writes the token into `process.env.ACCESS_TOKEN` before the main suite runs. Do not add the token to `env/.env.example`. See the `helpers` skill (Phase 6) for the pattern.
-
 **TypeScript complains that `process.env.X` is `string | undefined`.**
 Cause: `process.env` values are always optional types in Node.
 Fix: See the `type-safety` skill for the two sanctioned patterns (non-null assertion with `!` for values guaranteed to exist at runtime; fallback default with `??` otherwise).
 
-**I want to put an endpoint path in a config file.**
-Cause: Wrong skill. Paths are source-controlled constants, not environment-driven settings.
-Fix: Add the path to `enums/{area}/*` (see the `enums` skill). `config/` is only for URLs, credentials, and infra settings.
+**I want to put a route in a config file.**
+Cause: Wrong skill. Routes are source-controlled constants, not environment-driven settings.
+Fix: Add the route to `enums/{area}/*` (see the `enums` skill). `config/` is only for URLs, credentials, and infra settings.
 
 **My new config property has no JSDoc and the PR review is blocking.**
 Fix: Every config property requires a JSDoc comment naming the backing env var, e.g. `/** Reporting service base URL loaded from REPORTING_URL env variable */`.
@@ -210,7 +201,6 @@ Fix: Remove the file from the commit (`git rm --cached env/.env.dev`), verify it
 
 ## See Also
 
-- **`enums` skill** — endpoint paths, route constants, and storage-state paths live there, not in `config/`.
+- **`enums` skill** — routes and storage-state paths live there, not in `config/`.
 - **`type-safety` skill** — handling `string | undefined` returned by `process.env.*` (`!` vs fallback defaults).
-- **`api-testing` skill** — which env vars tests consume (`API_URL`, `ACCESS_TOKEN`, `ACCESS_TOKEN_ZERO`, `APP_EMAIL`, `APP_PASSWORD`) and how.
 - **`debugging` skill** — when `process.env.X` is `undefined` at runtime, when a CI run reads different env values than local, or when a navigation times out because `APP_URL` is wrong.

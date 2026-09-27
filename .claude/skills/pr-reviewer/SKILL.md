@@ -1,7 +1,6 @@
 ---
 name: pr-reviewer
-description: Reviews a Git branch as a pull request against the base branch (auto-resolved from origin/HEAD — usually main or master) using this repo's own rules — the CLAUDE.md constitution and the .claude/skills/ that apply to the changed files. Fetches the branch, switches to it, diffs it against the merge-base, routes the changed files to every applicable skill, verifies (eslint + prettier + tsc, and attempts the affected tests), then reports tiered findings with a confidence score. After reporting it OPTIONALLY offers to implement fixes for the findings, and only if fixes are applied does it ask permission to commit. Use this whenever the user names a branch alongside any review intent — "review PR for branch X", "PR review on aex-1234-foo against master", "review the diffs on branch Y", "check / audit the changes on branch Z", "is branch W good to merge". Use it even when the user says "PR" without the word "review", or "review" without "PR", as long as a branch is in play. Do NOT use this for reviewing the current uncommitted working-tree diff (that is /code-review's job) or for authoring brand-new tests/page objects from scratch (route to common-tasks / api-testing / page-objects instead).
-author: Ivan Davidov
+description: Reviews a Git branch as a pull request against the base branch (auto-resolved from origin/HEAD — usually main or master) using this repo's own rules — the CLAUDE.md constitution and the .claude/skills/ that apply to the changed files. Fetches the branch, switches to it, diffs it against the merge-base, routes the changed files to every applicable skill, verifies (eslint + prettier + tsc, and attempts the affected tests), then reports tiered findings with a confidence score. After reporting it OPTIONALLY offers to implement fixes for the findings, and only if fixes are applied does it ask permission to commit. Use this whenever the user names a branch alongside any review intent — "review PR for branch X", "PR review on aex-1234-foo against master", "review the diffs on branch Y", "check / audit the changes on branch Z", "is branch W good to merge". Use it even when the user says "PR" without the word "review", or "review" without "PR", as long as a branch is in play. Do NOT use this for reviewing the current uncommitted working-tree diff (that is /code-review's job) or for authoring brand-new tests/page objects from scratch (route to common-tasks / page-objects instead).
 ---
 
 # PR Reviewer
@@ -58,11 +57,9 @@ The changed file paths decide which rules apply. This is the heart of doing it _
 
 | Changed path (glob)                                         | Read these skills                                 |
 | ----------------------------------------------------------- | ------------------------------------------------- |
-| `tests/**/api/**`                                           | `api-testing`, `test-standards`, `type-safety`    |
 | `tests/**/e2e/**`, `tests/**/functional/**`                 | `test-standards`, `page-objects`, `fixtures`      |
 | `tests/**/*.setup.ts`                                       | `helpers`, `fixtures`, `test-standards`           |
 | `pages/**`                                                  | `page-objects`, `selectors`, `playwright-cli`     |
-| `fixtures/api/schemas/**`                                   | `type-safety`, `api-testing`                      |
 | `fixtures/**`                                               | `fixtures`, `helpers`                             |
 | `test-data/factories/**`                                    | `data-strategy`, `type-safety`                    |
 | `test-data/static/**`                                       | `data-strategy`, `refactor-values`, `type-safety` |
@@ -113,7 +110,7 @@ npx playwright test <changed spec path> --project <project-name>
 
 > The naming scheme is **repo-specific** (often `<area>-<browser>`, e.g. `front-chromium`, but not guaranteed). Derive `<area>` from the spec path `tests/<area>/...`, then pick the config project whose name contains that area. A bare area word or the spec path alone usually won't select a project. Setup projects (commonly `<area>-setup`) run automatically as dependencies. If no project matches, run without `--project` and note it in the report.
 
-**Missing env ≠ branch defect.** API / wallet / back specs read runtime tokens (`USER_ACCESS_TOKEN_WALLET`, `PUBLIC_GATEWAY_URL`, etc.) that a `*.setup.ts` mints from real credentials. With no env file those vars are undefined and the run dies at auth/setup. That is an **environment limitation, not a branch defect** — report it verbatim as _"could not run — missing env tokens (`<var>`); run manually before merge"_ and move on. **Never** invent, hardcode, or stub a token to force a green run.
+**Missing env ≠ branch defect.** Specs read runtime credentials (`APP_URL`, `APP_EMAIL`, `APP_PASSWORD`, etc.) that a `*.setup.ts` uses to authenticate. With no env file those vars are undefined and the run dies at auth/setup. That is an **environment limitation, not a branch defect** — report it verbatim as _"could not run — missing env vars (`<var>`); run manually before merge"_ and move on. **Never** invent, hardcode, or stub a credential to force a green run.
 
 ### Phase 5 — Review against the rules
 
@@ -121,11 +118,10 @@ npx playwright test <changed spec path> --project <project-name>
 
 With the routed skills + Constitution in hand, walk the diff and check, at minimum:
 
-- **MUST rules** from `CLAUDE.md` for the touched area — e.g. for API specs: `expect(Schema.parse(body)).toBeTruthy()` exactly; `z.strictObject()` not `z.object()`; **2+ API calls each in its own `test.step()`**; one tag per test; URLs/paths/messages from `config`/`enums` not hardcoded; state-mutating tests have cleanup hooks.
-- **WON'T rules** — no `any`, no XPath, no `waitForTimeout()`, no hardcoded secrets/content, no loose schemas, no tags on `describe`, no silent coverage drops (every documented status code has a test — passing, failing, or `test.skip` + `// FIXME`).
-- **Contract fidelity (STRICT).** Schemas must mirror the documented OpenAPI/Swagger contract — `z.strictObject`, exact field nullability, correct top-level validators. When the live API disagrees with the documented contract, the API is the bug, **never the schema**. Flag — as a 🔴 Must-fix — any of these schema-loosening moves, even if they make a test pass: relaxing `z.strictObject` → `z.object`; adding `.optional()`/`.nullable()`/`.passthrough()`/`.catchall()` or widening a type purely to absorb an unexpected runtime value; deleting a field the contract documents; replacing a precise validator (`z.uuid`, `z.iso.datetime`, `z.int`) with a looser one. The sanctioned response to a real mismatch is `test.skip` + `// FIXME: <ticket>` documenting the discrepancy — the schema stays faithful to the contract. A loosened schema is worse than a skipped test because it permanently hides the drift.
+- **MUST rules** from `CLAUDE.md` for the touched area — e.g. for spec files: web-first assertions only, never `waitForTimeout()`; one tag per test; routes/messages from `enums` and URLs/credentials from `process.env.*` not hardcoded; state-mutating tests have cleanup hooks.
+- **WON'T rules** — no `any`, no XPath, no `waitForTimeout()`, no hardcoded secrets/content, no tags on `describe`.
 - **Consistency with siblings** — compare against the nearest existing file of the same kind (the sibling controller spec, the neighbouring page object). Divergence from an established pattern is a finding even when no rule names it.
-- **Real bugs** — logic errors, wrong assertions, fragile data assumptions (e.g. `.find()` on a possibly-empty env response), off-by-one, copy-paste leftovers (stale qase IDs, wrong endpoint).
+- **Real bugs** — logic errors, wrong assertions, fragile data assumptions (e.g. `.find()` on a possibly-empty env response), off-by-one, copy-paste leftovers (stale qase IDs, wrong route).
 - **Coverage gaps** — status codes / fields / negative cases present in siblings but missing here.
 - **Scope creep** — changes unrelated to the branch's ticket; flag as noise even if harmless.
 
@@ -139,7 +135,7 @@ With the routed skills + Constitution in hand, walk the diff and check, at minim
 .claude/skills/pr-reviewer/scripts/scan-constitution.sh "$BASE"
 ```
 
-The script greps the changed files for the deterministically-detectable violations (`any`, `z.object(`, `waitForTimeout`, XPath, `@playwright/test` import in specs, manual page-object `new`, `@functional`, tags on `describe`, `.json` under `test-data/static`, magic-number timeouts, hardcoded URLs) and lists every `Schema.parse()` call site for you to confirm. It maps each check to a checklist row by `[#]`. Use its ✅/❌ to fill those rows directly — it can't miss a hit the way a manual scan can, and it frees your attention for the judgment items.
+The script greps the changed files for the deterministically-detectable violations (`any`, `waitForTimeout`, XPath, `@playwright/test` import in specs, manual page-object `new`, `@functional`, tags on `describe`, `.json` under `test-data/static`, magic-number timeouts, hardcoded URLs). It maps each check to a checklist row by `[#]`. Use its ✅/❌ to fill those rows directly — it can't miss a hit the way a manual scan can, and it frees your attention for the judgment items.
 
 Then read **`references/constitution-checklist.md`** and walk the remaining items against the three-dot diff — the ones a grep can't judge: coverage gaps, sibling divergence, schema-vs-contract fidelity, cleanup hooks, return-type completeness, feedback-message selectors. Record ✅ / ❌ / ➖ with `file:line` evidence for every applicable item. The routed skills from Phase 3 layer area-specific depth on top — the checklist is the non-negotiable baseline.
 
@@ -198,7 +194,7 @@ After the report, offer: _"Want me to implement any of these findings?"_ The use
 State a 1–10 score with a one-line rationale and the unknowns that cap it.
 
 - **9–10** — diff fully read, all applicable skills routed, lint/tsc run clean on changed files, findings each tied to a rule/bug; only trivia left uncertain.
-- **6–8** — review solid but something couldn't be confirmed (tests unrunnable for lack of env, an OpenAPI contract you couldn't see, a data assumption you couldn't verify).
+- **6–8** — review solid but something couldn't be confirmed (tests unrunnable for lack of env, a live-app behaviour you couldn't verify via `playwright-cli`, a data assumption you couldn't check).
 - **≤5** — couldn't read the full diff, couldn't route the right skills, or the branch depends on context you don't have. Say what's missing instead of guessing.
 
 Be honest about what you couldn't verify — a capped score with a clear reason is more useful than false certainty.
@@ -210,7 +206,6 @@ Be honest about what you couldn't verify — a capped score with a clear reason 
 - **Read-only until Phase 7 is approved.** The review never edits files. If the user only asked to "review", they get a report and nothing else.
 - **Three-dot diff always.** Reviewing master's own commits is the most common false-finding source.
 - **Every finding needs a hook** — a rule, a bug, or a missing case. No rule-less style opinions.
-- **Runtime ≠ contract (hard line).** API behaviour that disagrees with the documented spec is a bug to _report_ via `test.skip` + `// FIXME: <ticket>`, **never** a schema to _relax_. Any schema-loosening introduced to swallow a runtime surprise is itself a 🔴 Must-fix finding — see the Contract-fidelity bullet in Phase 5.
 - **Env failures aren't branch failures.** Distinguish "the branch is wrong" from "I lack the tokens/URL to run it".
 - **Don't trust the diff's own claims.** If a comment or test name says one thing and the code does another, that gap is itself a finding.
 

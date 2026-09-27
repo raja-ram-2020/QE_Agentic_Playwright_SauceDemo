@@ -1,7 +1,6 @@
 ---
 name: ai-native-workflow
 description: Sole entry-point router for AI-assisted work on this Playwright scaffold — owns the 8-phase main workflow (classify → route → explore → plan+confidence → human gate → apply → verify → report), the human↔agent conversation contract, the routing matrix that picks the right specialized skill, and the confidence-gate format that every non-trivial proposal must include. Use whenever a user starts a non-trivial task ("add tests for X", "create a page object", "rename this enum", "debug this failure", "refactor Y"), when onboarding to AI-assisted development on this scaffold, when planning a multi-step change that chains across several skills, or when the user asks "how should I work with AI here", "which skill for X?", "why is the agent doing Y?". This is the routing layer — load it first, then chain to the deep skill it points at.
-author: Ivan Davidov
 ---
 
 # AI-Native Workflow
@@ -13,14 +12,14 @@ For deeper context: see `references/three-layer-model.md`, `references/conversat
 ## Critical
 
 - **Low confidence means Phase 3 is incomplete.** Would-be confidence **< 5** → do **NOT** emit Phase 4; return to Phase 3 and **ASK the user**. Full thresholds live in one place — "Phase 4 — Confidence-Gate Format" below; other docs link there and never restate them. This rule is the most leveraged in the workflow: it stops plausible-looking plans built on guesses.
-- **Ask, don't invent.** Never guess folder names, file paths, env-var names, enum values, credentials, or message strings. `ls`, `grep`, `playwright-cli`, OpenAPI — or ask.
+- **Ask, don't invent.** Never guess folder names, file paths, env-var names, enum values, credentials, or message strings. `ls`, `grep`, `playwright-cli` — or ask.
 - **Refuse placeholders.** Guessed selectors, unverified message strings, made-up enum values, secret-shaped strings — refuse and re-explore. **`TODO` / `skeleton` / "to fill in later" outputs count as placeholders too** — offering a "skeleton page object with TODO locators while we wait for `playwright-cli`" is the same failure mode as inventing locators outright; don't.
 - **Verify the user's premise even in Direct Mode.** Before applying a one-line fix, confirm the reported defect actually exists (the typo on the cited line, the import the user wants removed, the value the user says is currently set). If the premise doesn't match the file, switch out of Direct Mode and ASK — applying a "fix" to a defect that isn't there invents a change.
-- **Specialized skills own the rules.** This skill never restates rules from `api-testing`, `page-objects`, etc. It tells you **which skill to load** and **in what order**.
+- **Specialized skills own the rules.** This skill never restates rules from `page-objects`, `selectors`, etc. It tells you **which skill to load** and **in what order**.
 - **`CLAUDE.md` Constitution is the safety floor.** MUST/SHOULD/WON'T tables are hard stops; they take precedence over any prose, template, or example.
 - **Audit-then-edit by default.** For any non-trivial change, follow the 8-phase workflow below. Phase 4 (Plan + Confidence) is mandatory before Phase 6 (Apply).
 - **Confidence gate is required.** Every Plan output must include a 1-10 confidence + rationale + unknowns block. See "Phase 4" below.
-- **Exploration is non-negotiable.** UI → `playwright-cli` only (no IDE browser MCP, no Cursor browser, no `playwright codegen`). API → OpenAPI/docs first, live HTTP only as fallback.
+- **Exploration is non-negotiable.** UI → `playwright-cli` only (no IDE browser MCP, no Cursor browser, no `playwright codegen`).
 - **One skill at a time.** Load skills sequentially per the routing table. Don't stack 5 skills' Critical blocks before starting work.
 - **After any test edit, run the affected tests.** On red, load `debugging` — never suppress, never bump timeouts.
 
@@ -32,11 +31,11 @@ Every non-trivial task runs through these phases in order.
 | --- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | **Classify intent**     | Match user request → intent class (codegen / edit / refactor / debug / explore / config).                                                                                                                | —                                                                                                                                               |
 | 2   | **Route**               | Pick first skill from routing table. Codegen → `common-tasks`. Other → direct skill.                                                                                                                     | —                                                                                                                                               |
-| 3   | **Explore**             | Confirm what's known vs unknown; gather evidence per flow. **If a primary input is missing (URL, OpenAPI, area folder, field list), ASK the user before advancing — do NOT carry the gap into Phase 4.** | UI: `playwright-cli`. API: `api-testing` Phase 1 (OpenAPI). Refactor: `refactor-values` Phase 1 (impact grep). Debug: `debugging` capture step. |
+| 3   | **Explore**             | Confirm what's known vs unknown; gather evidence per flow. **If a primary input is missing (URL, area folder, selector list), ASK the user before advancing — do NOT carry the gap into Phase 4.** | UI: `playwright-cli`. Refactor: `refactor-values` Phase 1 (impact grep). Debug: `debugging` capture step. |
 | 4   | **Plan + Confidence**   | Produce proposal block (see format below).                                                                                                                                                               | — (owned here)                                                                                                                                  |
 | 5   | **Human gate**          | Wait for confirm / reject / rework. On reject → return to Phase 3 with stated gap.                                                                                                                       | —                                                                                                                                               |
 | 6   | **Apply**               | Edits per leaf-skill rules. Re-check Critical blocks of every loaded skill.                                                                                                                              | leaf skill                                                                                                                                      |
-| 7   | **Verify**              | Lint + run affected tests. Red → load `debugging`.                                                                                                                                                       | `debugging` (on red), `refactor-values` Phase 4 (refactor), `api-testing` Phase 5 (API coverage matrix)                                         |
+| 7   | **Verify**              | Lint + run affected tests. Red → load `debugging`.                                                                                                                                                       | `debugging` (on red), `refactor-values` Phase 4 (refactor)                                         |
 | 8   | **Report + commit ask** | Files changed, line counts, lint status. Ask before committing.                                                                                                                                          | —                                                                                                                                               |
 
 ### Phase 4 — Confidence-Gate Format (mandatory)
@@ -54,29 +53,30 @@ Every Plan output before the human gate uses this shape:
 
 **Confidence rules** (canonical home — `conversation-contract.md` and the Critical block above link here; never restate these thresholds elsewhere):
 
-- **< 5** → **do NOT emit Phase 4.** Exploration is incomplete. Return to Phase 3 and **ASK the user** for the missing primary input (URL, OpenAPI source, area folder, field list, etc.). Frame the gap as questions, not as a low-confidence proposal — Phase 4 exists for honest _trade-off_ decisions, not for documenting "I don't have enough data".
+- **< 5** → **do NOT emit Phase 4.** Exploration is incomplete. Return to Phase 3 and **ASK the user** for the missing primary input (URL, area folder, selector list, etc.). Frame the gap as questions, not as a low-confidence proposal — Phase 4 exists for honest _trade-off_ decisions, not for documenting "I don't have enough data".
 - **5-7** → emit Phase 4 with explicit unknowns. Proceed only if the human accepts the trade-offs at this confidence level.
 - **≥ 8** → full evidence in hand; proceed normally.
-- **≥ 9** only if: explicit OpenAPI / spec match, no `{area}` ambiguity, no missing enum / env / credential, no untested branch, no in-flight conflicting work.
+- **≥ 9** only if: explicit `playwright-cli` exploration match, no `{area}` ambiguity, no missing enum / env / credential, no untested branch, no in-flight conflicting work.
 - **Rejection by human** → re-enter Phase 3 with stated gap. Do **not** retry Phase 4 with the same plan.
 
 ## Routing Table (intent → first skill)
 
 | User intent                                 | First skill             | Then chains to                                            |
 | ------------------------------------------- | ----------------------- | --------------------------------------------------------- |
-| "Add tests for `POST /api/...`"             | `api-testing`           | `data-strategy`, `enums`, `type-safety`, `debugging`      |
 | "Add a page object for X"                   | `page-objects`          | `selectors`, `playwright-cli`, `enums`, `fixtures`        |
 | "Generate prompt for X" / "How do I add Y?" | `common-tasks`          | matching specialized skill                                |
-| "Test failing / flaky"                      | `debugging`             | `api-testing`, `selectors`, `fixtures`, `refactor-values` |
+| "Test failing / flaky"                      | `debugging`             | `selectors`, `fixtures`, `refactor-values`                |
 | "Rename enum / change static value"         | `refactor-values`       | `enums` or `data-strategy` → `debugging`                  |
-| "Create factory for X"                      | `data-strategy`         | `type-safety`, `api-testing`                              |
-| "Wire setup helper / helper fixture"        | `helpers` or `fixtures` | `api-testing` Phase 8                                     |
+| "Create factory for X"                      | `data-strategy`         | `type-safety`                                              |
+| "Wire setup helper / helper fixture"        | `helpers` or `fixtures` | —                                                          |
 | "Add env var / config / utility URL"        | `config`                | `enums`, `type-safety`                                    |
-| "Add enum / endpoint / message"             | `enums`                 | `playwright-cli` for live-text verification               |
-| "Refactor Zod schema / convert any → typed" | `type-safety`           | `api-testing`                                             |
-| "Add spec file / tag / structure question"  | `test-standards`        | `data-strategy`, `api-testing`, `page-objects`            |
+| "Add enum / route / message"                | `enums`                 | `playwright-cli` for live-text verification               |
+| "Convert `any` to a proper type"            | `type-safety`           | —                                                          |
+| "Add spec file / tag / structure question"  | `test-standards`        | `data-strategy`, `page-objects`                            |
 | "Create / improve / eval an agent skill"    | `skill-creator`         | `ai-native-workflow` (routing fit), this index            |
 | "How does this scaffold work with AI?"      | **this skill**          | relevant specialized skill                                |
+
+> API-related intents (e.g. "Add tests for `POST /api/...`") are out of scope for this workspace's routing — only UI test automation is in use here. The `api-testing` skill has been removed entirely (see CLAUDE.md). If API work resumes, it needs to be authored fresh via `skill-creator`, then re-added as a row here.
 
 If intent matches none of the above → default to `common-tasks` or ask the user to clarify.
 
@@ -89,7 +89,7 @@ For trivial work (one-line fix, obvious typo, single import) the agent applies a
 ## When to Stop and Ask
 
 - Path / folder name unknown (`ls` first; if still unclear, ask).
-- Enum value / message text / endpoint path unknown (`playwright-cli` for UI, OpenAPI for API; ask if neither).
+- Enum value / message text / route unknown (`playwright-cli`; ask if that fails).
 - Two valid approaches with meaningful trade-offs (architectural decisions belong to the human).
 - A skill's Critical rule conflicts with the user's request (raise it; never silently bypass).
 
@@ -99,10 +99,9 @@ For the full conversation contract (audit-then-edit details, refusal triggers), 
 
 Surface across multiple specialized skills — re-check before declaring done:
 
-- `expect(SchemaName.parse(body)).toBeTruthy();` for API responses.
 - `getByRole > getByLabel > getByPlaceholder > getByText > getByTestId` for selectors.
 - Single tag per test; `@destructive` is heaviest and wins — **shared/global state only** (locale, permissions, roles, access, flags, settings). Isolated own-data tests keep their importance tag. Any state-mutating test needs a revert hook.
-- `z.strictObject()` (never `z.object()`), no `any`, no XPath, no `page.waitForTimeout(...)`.
+- No `any`, no XPath, no `page.waitForTimeout(...)`.
 - `process.env.*` for URLs/credentials; `enums/{area}/*` for paths/messages.
 - Static data is `.ts` with `as const` exports — never `.json`.
 
@@ -111,7 +110,6 @@ Surface across multiple specialized skills — re-check before declaring done:
 - **`CLAUDE.md`** — always-loaded Constitution (MUST/SHOULD/WON'T tables).
 - **`common-tasks`** — codegen sub-router with prompt templates.
 - **`debugging`** — failure-investigation half of the lifecycle (Phase 7 routes here on red).
-- **`api-testing`** — deep skill for API work; owns Phase 1 (contract source) and Phase 7 (behaviour mismatch).
 - **`refactor-values`** — deep skill for changing existing enum / static values.
 - **`page-objects`**, **`selectors`**, **`playwright-cli`** — UI authoring chain.
 - **`test-standards`**, **`data-strategy`**, **`type-safety`**, **`enums`**, **`config`**, **`fixtures`**, **`helpers`** — rest of the suite.
@@ -119,5 +117,5 @@ Surface across multiple specialized skills — re-check before declaring done:
 - **`references/three-layer-model.md`** — how orchestrator / specialized skills / code conventions layer.
 - **`references/conversation-contract.md`** — audit-then-edit, when to ask vs do, when to refuse.
 - **`references/principles.md`** — the five principles that make the scaffold AI-native.
-- **`references/examples.md`** — three end-to-end multi-skill chains (API test, refactor, CI failure).
+- **`references/examples.md`** — three end-to-end multi-skill chains (page object + test, refactor, CI failure).
 - **`references/troubleshooting.md`** — common agent failure modes and fixes.

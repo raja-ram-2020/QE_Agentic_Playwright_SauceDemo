@@ -1,7 +1,6 @@
 ---
 name: data-strategy
-description: Test data strategy for the Playwright scaffold — Faker + Zod factories for dynamic happy-path data, static TS files (`.ts` with `as const` exports — never `.json`) for domain-specific curated invalid sets, and the universal type-mismatch arrays in test-data/static/util/invalid-values.ts. Use when creating or editing a data factory, adding a new invalid-values dataset, deciding between factory / static / inline / enum for a new test value, writing data-driven tests, or updating existing static data. For the API negative-testing patterns that consume this data see the api-testing skill (Phase 6, three-tier rule); for safe edits to existing static values see the refactor-values skill; for Zod 4 validator rules see the type-safety skill.
-author: Ivan Davidov
+description: Test data strategy for the Playwright scaffold — Faker factories for dynamic happy-path data, static TS files (`.ts` with `as const` exports — never `.json`) for domain-specific curated invalid sets, and the universal type-mismatch arrays in test-data/static/util/invalid-values.ts. Use when creating or editing a data factory, adding a new invalid-values dataset, deciding between factory / static / inline / enum for a new test value, writing data-driven tests, or updating existing static data. For safe edits to existing static values see the refactor-values skill; for TypeScript typing rules see the type-safety skill.
 ---
 
 # Data Strategy
@@ -14,7 +13,6 @@ This framework uses a **bifurcated data strategy**: static data for deterministi
 - **Static data files may only export literal values.** No runtime imports (type-only imports are fine), no function definitions, no computed values, no Faker calls. Dynamic data belongs in factories, not in static files.
 - **NEVER** hardcode test content strings (names, emails, todo text, product names, descriptions, etc.) in a spec file. Generate with a Faker factory.
 - **NEVER** redefine universal type-mismatch arrays (`[123, true, null, undefined]`, etc.) inline. Import them from `test-data/static/util/invalid-values.ts`.
-- **ALWAYS** validate factory output with `Schema.parse(...)` and return the Zod-inferred type.
 - **NEVER** generate app-defined strings with Faker (error messages, button labels, page headers). Those live in `enums/` so they stay in sync with the application under test.
 - **NEVER** store fixed expected values that are used in a single assertion in a static data file. Keep them inline in the test.
 - **ALWAYS** follow the `refactor-values` skill before editing any existing static-data file or enum value — these edits cascade through assertions and data-driven loops.
@@ -28,7 +26,7 @@ This framework uses a **bifurcated data strategy**: static data for deterministi
 | ------------------------ | ----------------------------- | ------------------------------------------------------------------------------------ |
 | Universal invalid arrays | `test-data/static/util/`      | Type-mismatch tuples reused by every negative test (`.ts`, `as const`)               |
 | Domain-specific static   | `test-data/static/{area}/`    | Curated invalid/boundary sets tied to the app's validation rules (`.ts`, `as const`) |
-| Dynamic factories        | `test-data/factories/{area}/` | Faker + Zod factories for unique, valid data per test run                            |
+| Dynamic factories        | `test-data/factories/{area}/` | Faker factories for unique, valid data per test run                                  |
 
 ## Instructions
 
@@ -50,43 +48,39 @@ If the value fits none of the rows, stop and ask. Do not invent a new location.
 
 ### Phase 2: Create or extend a factory
 
-Follow this when Phase 1 pointed at a factory. Factories use **Faker + Zod** for unique, valid data per test run — this prevents collisions in parallel execution.
+Follow this when Phase 1 pointed at a factory. Factories use **Faker** for unique, valid data per test run — this prevents collisions in parallel execution.
 
 ```typescript
 import { faker } from '@faker-js/faker';
-import {
-    UserResponse,
-    UserResponseSchema,
-} from '../../../fixtures/api/schemas/app/userSchema';
+
+export type NewUser = {
+    email: string;
+    password: string;
+    fullName: string;
+};
 
 /**
- * Generates a valid user object with randomized data.
- * @param {Partial<UserResponse>} overrides - Optional overrides for specific fields.
- * @returns {UserResponse} A valid user object matching the schema.
+ * Generates a valid new-user object with randomized data.
+ * @param {Partial<NewUser>} overrides - Optional overrides for specific fields.
+ * @returns {NewUser} A valid new-user object for filling out signup/checkout forms.
  */
-export const generateUser = (
-    overrides?: Partial<UserResponse>
-): UserResponse => {
-    const defaults: UserResponse = {
-        id: faker.string.uuid(),
+export const generateNewUser = (overrides?: Partial<NewUser>): NewUser => {
+    const defaults: NewUser = {
         email: faker.internet.email(),
-        token: faker.string.alphanumeric(64),
+        password: faker.internet.password({ length: 12 }),
+        fullName: faker.person.fullName(),
     };
 
-    return UserResponseSchema.parse({ ...defaults, ...overrides });
+    return { ...defaults, ...overrides };
 };
 ```
-
-> **Note:** Zod 4 uses top-level validators (`z.uuid()`, `z.email()`, etc.) in schemas, but the `.parse()` API and `z.infer<>` type inference work identically to v3. Factories require no code changes beyond updating their imported schemas.
 
 Key requirements:
 
 1. **Import Faker:** `import { faker } from '@faker-js/faker';`
-2. **Import the Zod schema:** use the corresponding schema from `fixtures/api/schemas/{area}/`.
-3. **Accept overrides:** `overrides?: Partial<SchemaType>` for customisation.
-4. **Validate with schema:** always call `Schema.parse(...)` on the merged output.
-5. **Export typed return:** return type must match the Zod-inferred type.
-6. **JSDoc:** factories are action-like functions — include `@param` / `@returns`.
+2. **Accept overrides:** `overrides?: Partial<ReturnType>` for customisation.
+3. **Export an explicit type:** define and export the shape the factory returns; no `any`.
+4. **JSDoc:** factories are action-like functions — include `@param` / `@returns`.
 
 ### Phase 3: Add static data
 
@@ -106,7 +100,7 @@ INVALID_ARRAY_VALUES    → ['string', 123, null, undefined, {}]
 INVALID_OBJECT_VALUES   → ['string', 123, null, undefined, []]
 ```
 
-Import and iterate in spec files; never redefine. See the `api-testing` skill (Phase 6) for the full consumer pattern.
+Import and iterate in spec files; never redefine.
 
 #### Tier 2 — Domain-specific static data (`test-data/static/{area}/`)
 
@@ -168,14 +162,14 @@ Promote to Tier 2 only if the same boundary set is reused across 2+ fields or sp
 
 ```typescript
 import {
-    generateUser,
+    generateNewUser,
     generateLoginCredentials,
 } from '../../../test-data/factories/app/user.factory';
 
-const user = generateUser();
+const newUser = generateNewUser();
 const creds = generateLoginCredentials();
 
-const adminUser = generateUser({ email: 'admin@company.com' });
+const adminUser = generateNewUser({ email: 'admin@company.com' });
 const customCreds = generateLoginCredentials({
     password: 'SpecificPassword123!',
 });
@@ -188,9 +182,9 @@ import { INVALID_STRING_VALUES } from '../../../test-data/static/util/invalid-va
 
 for (const invalidValue of INVALID_STRING_VALUES) {
     test(
-        `should return 400 when name is ${JSON.stringify(invalidValue)}`,
-        { tag: '@api' },
-        async ({ apiRequest }) => {
+        `should show a validation error when name is ${JSON.stringify(invalidValue)}`,
+        { tag: '@regression' },
+        async ({ appPage }) => {
             // ...
         }
     );
@@ -225,11 +219,10 @@ When a numeric tuning value is genuinely unavoidable:
 
 ## See Also
 
-- **`api-testing`** skill — Phase 6 three-tier consumer pattern, per-field `for...of` loops, negative-validation coverage matrix.
 - **`refactor-values`** skill — impact analysis and cascading update workflow for enum values and static data changes.
-- **`type-safety`** skill — Zod 4 validator reference and `z.strictObject()` patterns used in factory validation.
+- **`type-safety`** skill — TypeScript typing rules (no `any`, explicit return types) applied to factory functions.
 - **`enums`** skill — canonical home for app-defined strings (error messages, labels, route paths).
 - **`config`** skill — where timeouts / retries / workers belong (`playwright.config.ts`), not `test-data/`.
-- **`debugging`** skill — when a factory output fails `Schema.parse(...)` or a data-driven loop fails one row out of many, classify and investigate before mutating the factory.
+- **`debugging`** skill — when a data-driven loop fails one row out of many, classify and investigate before mutating the factory.
 - **`references/examples.md`** — three worked walkthroughs (new factory, domain-specific invalid set, full negative-API coverage combining factory + universal + boundary) plus Tier 2 + Tier 3 consumption snippets.
 - **`references/troubleshooting.md`** — common data-strategy pitfalls (parallel collisions, factory schema parse failure, inline invalid arrays, Faker-generated app strings, single-string JSON, edits to existing static data, magic-number timeouts).

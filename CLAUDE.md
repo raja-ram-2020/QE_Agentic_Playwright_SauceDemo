@@ -8,7 +8,7 @@ This file is always loaded and provides the high-level rules, workflow, and an i
 
 ### Role
 
-You are an Automation Test Architect with extensive experience in both API and UI testing using Playwright. Your expertise spans designing scalable test automation frameworks, implementing type-safe solutions with TypeScript and Zod, and applying best practices for test isolation, maintainability, and reliability.
+You are an Automation Test Architect with extensive experience in UI testing using Playwright. Your expertise spans designing scalable test automation frameworks, implementing type-safe solutions with TypeScript, and applying best practices for test isolation, maintainability, and reliability.
 
 ### MUST (Mandatory)
 
@@ -18,24 +18,21 @@ You are an Automation Test Architect with extensive experience in both API and U
 | **Dependency Injection** | Use fixtures from `fixtures/pom/test-options.ts`, never `new PageObject(page)` in tests                                                                                |
 | **Imports**              | Import `test` and `expect` from `fixtures/pom/test-options.ts` only (never `@playwright/test` in spec files)                                                           |
 | **Selectors**            | Prioritize: `getByRole()` > `getByLabel()` > `getByPlaceholder()` > `getByText()` > `getByTestId()`                                                                    |
-| **Type Safety**          | Use Zod schemas in `fixtures/api/schemas/`, no `any` type                                                                                                              |
-| **Strict Schemas**       | Always use `z.strictObject()` for API schemas -- rejects unknown keys instead of silently stripping them                                                               |
-| **Response Validation**  | Assert API responses with the exact pattern `expect(SchemaName.parse(body)).toBeTruthy();` -- type generics or a bare `Schema.parse(body)` are insufficient            |
-| **Sources of Truth**     | URLs and credentials come from `process.env.*` (declared in `env/.env.example`); endpoint paths, route constants, UI message strings, and storage-state paths come from `enums/{area}/*` and `enums/util/*`. Never hardcode |
+| **Type Safety**          | No `any` type; explicit return types on exported functions                                                                                                             |
+| **Sources of Truth**     | URLs and credentials come from `process.env.*` (declared in `env/.env.example`); routes, UI message strings, and storage-state paths come from `enums/{area}/*` and `enums/util/*`. Never hardcode |
 | **Assertions**           | Web-first assertions only: `expect(locator).toBeVisible()`, never `waitForTimeout()`                                                                                   |
 | **Linting**              | Code must pass ESLint and Prettier without warnings                                                                                                                    |
 | **Data Strategy**        | Universal invalid arrays in `test-data/static/util/invalid-values.ts`; domain-specific curated sets in `test-data/static/{area}/*.ts`; dynamic happy-path data in `test-data/factories/{area}/`                                  |
 | **State Cleanup**        | **Any** test that mutates persistent state MUST include `afterEach`/`afterAll` hooks that revert it — both `@destructive` shared-state tests and ordinary tests that create their own data                                |
-| **API Test Steps**       | When a test has 2+ API calls, each MUST be in dedicated `test.step()` with proper validation                                                                           |
 | **Test Verification**    | After adding or modifying test files, run the affected tests with `npx playwright test [file]` and confirm all pass. Do not mark the task complete with failing tests. |
-| **Explore Before Generate** | **API:** OpenAPI / Swagger documentation is the source of truth — build schemas and tests strictly from the documented contract. **Only when no documentation exists**, capture the live response shape via real HTTP requests as a fallback (and flag the missing docs). Runtime mismatches against the documented contract are **bugs** to report — handle via `test.skip` + `// FIXME:` (see "No Silent Coverage Drops"); never loosen the schema. **UI:** Before creating or editing `pages/**`, UI tests under `tests/**`, or selectors inferred from the live app, you **must** explore using **only** the **`playwright-cli`** executable (`open` / `goto`, `snapshot`, and further CLI commands as needed). Read `.claude/skills/playwright-cli/SKILL.md` first. If auth fails, the page does not load, or **`playwright-cli` cannot be run**, **stop** and notify the human — **do not substitute another tool** (see WON'T). |
+| **Explore Before Generate** | Before creating or editing `pages/**`, UI tests under `tests/**`, or selectors inferred from the live app, you **must** explore using **only** the **`playwright-cli`** executable (`open` / `goto`, `snapshot`, and further CLI commands as needed). Read `.claude/skills/playwright-cli/SKILL.md` first. If auth fails, the page does not load, or **`playwright-cli` cannot be run**, **stop** and notify the human — **do not substitute another tool** (see WON'T). |
 
 ### SHOULD (Recommended)
 
 <!-- prettier-ignore -->
 | Rule                        | Recommendation                                                                                                                                                   |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Data Generation**         | Use Faker via factories in `test-data/factories/` for all happy-path test data — not just API data, but any UI content values too                                |
+| **Data Generation**         | Use Faker via factories in `test-data/factories/` for all happy-path UI content values                                                                           |
 | **Test Isolation**          | Tests should be independent. Use `test.beforeEach` for setup, not shared state between tests                                                                     |
 | **Test Steps**              | Use `test.step()` with Given/When/Then structure for better readability and reporting                                                                            |
 | **JSDoc on Actions**        | Add JSDoc comments (with `@param` and `@returns`) to action methods only — never on locator getters                                                              |
@@ -51,17 +48,14 @@ You are an Automation Test Architect with extensive experience in both API and U
 | **No Secrets**                | Never hardcode credentials, use `process.env`                                                                                                                 |
 | **No `any`**                  | Never use `any` type                                                                                                                                          |
 | **No Tags on Describe**       | Never put tags in `test.describe()`, only on individual tests                                                                                                 |
-| **No Multiple Tags**          | Each test has exactly ONE tag: `@smoke`, `@sanity`, `@regression`, `@e2e`, `@api`, or `@destructive`. `@functional` is forbidden. **`@destructive` is the heaviest tag and always wins — but only for shared/global state.** A test that mutates state other tests or users depend on (locale, permissions, roles, guest access, feature flags, global settings) is tagged **only** `@destructive`, never combined with another tag. A test that creates and cleans up **only its own isolated data** is NOT destructive — tag it by importance (`@smoke`/`@regression`/`@api`/…). |
+| **No Multiple Tags**          | Each test has exactly ONE tag: `@smoke`, `@sanity`, `@regression`, `@e2e`, or `@destructive`. `@functional` is forbidden. **`@destructive` is the heaviest tag and always wins — but only for shared/global state.** A test that mutates state other tests or users depend on (locale, permissions, roles, guest access, feature flags, global settings) is tagged **only** `@destructive`, never combined with another tag. A test that creates and cleans up **only its own isolated data** is NOT destructive — tag it by importance (`@smoke`/`@regression`/…). |
 | **No Magic Numbers**          | Define timeouts and constants in `config/` or `enums/`                                                                                                        |
 | **No Manual Instantiation**   | Never `new PageObject(page)` inside test files                                                                                                                |
-| **No Loose Schemas**          | Never use `z.object()` for API schemas; use `z.strictObject()` to catch unexpected fields                                                                     |
 | **No JSDoc on Locators**      | Never add JSDoc to locator getters or locator-returning methods; action methods only                                                                          |
 | **No Hardcoded Test Content** | Never hardcode test content strings (names, labels, text values); use Faker factories instead                                                                 |
 | **No Explore-Only Files**     | Never commit test files whose sole purpose is dumping HTML or exploring the page structure                                                                    |
-| **No Empty-Body-Only 400**    | Never test 400 responses with only an empty body; every field must have per-field omission and invalid-type `for...of` loop tests                            |
 | **No Feedback-Less POM**      | Never create page objects for forms or CRUD pages without selectors for success, error, and validation messages                                              |
-| **No Substitute UI Exploration** | Never use **IDE browser MCP**, **Cursor-integrated browser tools**, **Playwright Test `codegen`**, or **any browser automation other than `playwright-cli`** to satisfy **Explore Before Generate** for page objects, UI tests, or UI-derived schemas. If `playwright-cli` is unavailable, **stop** and notify the human — do not silently use another explorer. |
-| **No Silent Coverage Drops** | Never omit a test because the API doesn't behave as expected. Use `test.skip` with `// FIXME` comment instead. Every status code in the OpenAPI spec must have a test — passing, failing, or explicitly skipped with justification. |
+| **No Substitute UI Exploration** | Never use **IDE browser MCP**, **Cursor-integrated browser tools**, **Playwright Test `codegen`**, or **any browser automation other than `playwright-cli`** to satisfy **Explore Before Generate** for page objects or UI tests. If `playwright-cli` is unavailable, **stop** and notify the human — do not silently use another explorer. |
 | **No JSON Static Data**       | Files under `test-data/static/**` must be TypeScript (`.ts` with `as const` exports). JSON is forbidden — it cannot represent `undefined`, has no comments, no type safety, and no narrow literal autocomplete. |
 
 ---
@@ -76,12 +70,10 @@ You are an Automation Test Architect with extensive experience in both API and U
 | Page objects     | `pages/{area}/`                | `[name].page.ts`      | `login.page.ts`           |
 | Components       | `pages/components/`            | `[name].component.ts` | `navigation.component.ts` |
 | Functional tests | `tests/{area}/functional/`     | `[name].spec.ts`      | `login.spec.ts`           |
-| API tests        | `tests/{area}/api/`            | `[name].spec.ts`      | `login.spec.ts`           |
 | E2E tests        | `tests/{area}/e2e/`            | `[name].spec.ts`      | `checkout.spec.ts`        |
 | Setup files      | `tests/{area}/`                | `[name].setup.ts`     | `auth.setup.ts`           |
 | Data factories   | `test-data/factories/{area}/`  | `[name].factory.ts`   | `user.factory.ts`         |
 | Static data      | `test-data/static/{area}/`     | `[name].ts`           | `invalidCredentials.ts`   |
-| Zod schemas      | `fixtures/api/schemas/{area}/` | `[name]Schema.ts`     | `userSchema.ts`           |
 | Helper fixtures  | `fixtures/helper/`             | `[name]-fixture.ts`   | `helper-fixture.ts`       |
 | Enums            | `enums/{area}/`                | `[name].ts`           | `front-office.ts`         |
 
@@ -113,9 +105,8 @@ Detailed skills live in `.claude/skills/` and contain in-depth rules, patterns, 
 | `page-objects`    | `pages/**`                                                     | POM pattern, getter locators, component composition, registration                   |
 | `fixtures`        | `fixtures/**`, `tests/**`                                      | Dependency injection, fixture creation, merging into test-options                   |
 | `test-standards`  | `tests/**`                                                     | Test structure, imports, tagging, steps, assertions, data-driven tests              |
-| `type-safety`     | `**/*.ts`                                                      | Zod schemas, no-any enforcement, TypeScript strict mode                             |
-| `data-strategy`   | `test-data/**`, `tests/**`                                     | Factories (Faker + Zod), static TS data (`as const` three-tier rule), when to use which |
-| `api-testing`     | `fixtures/api/**`, `fixtures/helper/**`, `tests/**/api/**`     | `apiRequest` fixture, schema validation, helper fixtures for setup/teardown         |
+| `type-safety`     | `**/*.ts`                                                      | No-any enforcement, explicit return types, TypeScript strict mode                   |
+| `data-strategy`   | `test-data/**`, `tests/**`                                     | Faker factories, static TS data (`as const` three-tier rule), when to use which     |
 | `enums`           | `enums/**`                                                     | Enum conventions, naming, organization                                              |
 | `config`          | `config/**`                                                    | Configuration patterns, environment variables                                       |
 | `helpers`         | `helpers/**`                                                   | Helper function conventions, auth helpers, helper vs fixture                        |
@@ -149,16 +140,13 @@ When running inside the Dev Container (`DEVCONTAINER=true`):
 ```
 fixtures/pom/test-options.ts           -- Single import point for test and expect
 fixtures/pom/page-object-fixture.ts    -- Page object fixture registration
-fixtures/api/api-request-fixture.ts    -- API request fixture (apiRequest for tests)
-fixtures/api/schemas/{area}/           -- App-specific Zod schemas
-fixtures/api/schemas/util/             -- Shared error response schemas
 fixtures/helper/helper-fixture.ts      -- Setup/teardown fixtures for important recurring operations
 pages/{area}/                          -- Page objects
 pages/components/                      -- Reusable UI components
-test-data/factories/{area}/            -- Data factories (Faker + Zod)
+test-data/factories/{area}/            -- Data factories (Faker)
 test-data/static/{area}/               -- Static boundary/invalid data
 config/                                -- App configuration
-enums/{area}/                          -- App-specific enums (endpoints, messages)
+enums/{area}/                          -- App-specific enums (routes, messages)
 enums/util/                            -- Shared enums (roles)
 helpers/{area}/                        -- App-specific helpers
 helpers/util/                          -- Utility functions

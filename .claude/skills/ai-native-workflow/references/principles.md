@@ -5,7 +5,7 @@ The scaffold is engineered so an LLM can reason from a small surface and produce
 ## 1. Single Source of Truth for Every Value Class
 
 - URLs / credentials → `process.env.*` (declared in `env/.env.example`).
-- Endpoint paths / route constants / UI message strings / storage-state paths → `enums/{area}/*` and `enums/util/*`.
+- Routes / UI message strings / storage-state paths → `enums/{area}/*` and `enums/util/*`.
 - Universal type-mismatch arrays → `test-data/static/util/invalid-values.ts`.
 - Domain-specific curated invalid sets → `test-data/static/{area}/*.ts`.
 - Dynamic happy-path data → Faker factories in `test-data/factories/{area}/`.
@@ -18,7 +18,7 @@ Every Critical block lists `NEVER` rules with concrete anti-examples. Forbidden 
 
 ## 3. Mandatory Exploration Discipline
 
-`playwright-cli` for UI, OpenAPI / docs first for API. The agent does not speculate about UI text or response shapes. When exploration is impossible (CLI broken, app unreachable, docs missing), the agent stops and notifies the human — it does not substitute another tool.
+`playwright-cli` is the only sanctioned live-app explorer. The agent does not speculate about UI text or element structure. When exploration is impossible (CLI broken, app unreachable), the agent stops and notifies the human — it does not substitute another tool.
 
 ## 4. Strict Folder Discipline
 

@@ -5,10 +5,10 @@
 **Cause:** The spec file imported `test` from `@playwright/test` instead of `fixtures/pom/test-options.ts`.
 **Fix:** Replace the import with `import { test, expect } from '../../../fixtures/pom/test-options';`.
 
-## I promoted a one-off API call to a fixture and now every test loads it
+## I promoted a one-off setup step to a fixture and now every test loads it
 
 **Cause:** Fixtures run for every test that injects them — if you add `featureFlag` to `HelperFixtures`, any test destructuring `{ featureFlag }` pays the setup/teardown cost.
-**Fix:** Remove the fixture and call `apiRequest` directly in the one test (or a focused `beforeEach`). Promote back to a helper fixture only when the same setup is copy-pasted across 3+ spec files (see the `api-testing` skill, Phase 8 rule of thumb).
+**Fix:** Remove the fixture and call the plain helper directly in the one test (or a focused `beforeEach`). Promote back to a helper fixture only when the same setup is copy-pasted across 3+ spec files (see the `helpers` skill rule of thumb).
 
 ## My helper fixture's teardown code never runs
 

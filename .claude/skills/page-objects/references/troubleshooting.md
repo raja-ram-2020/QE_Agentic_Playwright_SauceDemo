@@ -50,4 +50,4 @@ for load state) — nothing tied to any particular page's markup.
 ## Tests work when I run them alone but fail in parallel
 
 **Cause:** Page-object actions rely on shared state or hardcoded identifiers (usernames, emails).
-**Fix:** Use a factory (`generateUser()`) from `test-data/factories/{area}/` for dynamic data, and a helper fixture (see `api-testing` Phase 8) if the same setup/teardown is needed across 3+ files.
+**Fix:** Use a factory (`generateNewUser()`) from `test-data/factories/{area}/` for dynamic data, and a helper fixture (see the `fixtures` skill) if the same setup/teardown is needed across 3+ files.

@@ -19,12 +19,11 @@ import sys
 
 SPEC_FILE = re.compile(r"(^|/)tests/.+\.(spec|setup)\.ts$")
 TS_FILE = re.compile(r"\.ts$")
-SCHEMA_FILE = re.compile(r"(^|/)fixtures/api/schemas/.+\.ts$")
 UI_OR_TEST_FILE = re.compile(r"(^|/)(pages|tests)/.+\.ts$")
 STATIC_JSON = re.compile(r"(^|/)test-data/static/.+\.json$")
 
 TAG_IN_DESCRIBE = re.compile(
-    r"test\.describe(?:\.\w+)?\(\s*[`'\"][^`'\"]*@(smoke|sanity|regression|e2e|api|destructive|functional)"
+    r"test\.describe(?:\.\w+)?\(\s*[`'\"][^`'\"]*@(smoke|sanity|regression|e2e|destructive|functional)"
 )
 
 # (rule id, path predicate, content predicate or None, message)
@@ -45,13 +44,6 @@ RULES = [
         "`expect(locator).toBeVisible()` (Constitution WON'T: No Hard Waits).",
     ),
     (
-        "no-loose-schema",
-        lambda p: SCHEMA_FILE.search(p),
-        lambda c: re.search(r"\bz\.object\(", c),
-        "API schemas must use `z.strictObject()`, never `z.object()` "
-        "(Constitution WON'T: No Loose Schemas).",
-    ),
-    (
         "no-xpath",
         lambda p: UI_OR_TEST_FILE.search(p),
         lambda c: re.search(r"""xpath=|locator\(\s*[`'\"]//""", c),
@@ -70,7 +62,7 @@ RULES = [
         lambda p: SPEC_FILE.search(p),
         lambda c: "@functional" in c,
         "The `@functional` tag is forbidden. Use exactly one of @smoke, @sanity, "
-        "@regression, @e2e, @api, @destructive (Constitution WON'T: No Multiple Tags).",
+        "@regression, @e2e, @destructive (Constitution WON'T: No Multiple Tags).",
     ),
     (
         "no-tags-on-describe",

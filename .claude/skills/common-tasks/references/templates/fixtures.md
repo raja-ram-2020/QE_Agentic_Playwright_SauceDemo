@@ -26,13 +26,12 @@ Create a helper fixture for [PURPOSE]:
 
 Requirements:
 - Add return type to HelperFixtures
-- Use apiRequest from plain-function.ts for API calls
 - Implement setup → use() → teardown pattern
-- Setup: Create precondition via API before the test
+- Setup: Create the precondition before the test
 - Yield: Pass created data to the test via use()
 - Teardown: Clean up after the test (runs even on failure)
 - Already merged into test-options.ts (no extra registration needed)
-- Promote to a helper fixture only when the same setup/teardown is reused across 3+ spec files (see the api-testing skill, Phase 8)
+- Promote to a helper fixture only when the same setup/teardown is reused across 3+ spec files (see the fixtures skill)
 ```
 
 ## Add a New Fixture Category
