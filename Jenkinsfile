@@ -52,7 +52,7 @@ pipeline {
 
         stage('Dev - Smoke Tests') {
             steps {
-                sh 'mkdir -p reports-dev/html allure-results-dev'
+                sh 'rm -rf allure-results-dev && mkdir -p reports-dev/html allure-results-dev'
                 withCredentials([
                     usernamePassword(credentialsId: 'app-dev-credentials',
                         usernameVariable: 'APP_USERNAME', passwordVariable: 'APP_PASSWORD'),
@@ -104,7 +104,7 @@ pipeline {
         stage('QA - Full Test Suite') {
             when { expression { params.ENVIRONMENT in ['qa', 'stage', 'prod'] } }
             steps {
-                sh 'mkdir -p reports-qa/html allure-results-qa'
+                sh 'rm -rf allure-results-qa && mkdir -p reports-qa/html allure-results-qa'
                 withCredentials([
                     usernamePassword(credentialsId: 'app-qa-credentials',
                         usernameVariable: 'APP_USERNAME', passwordVariable: 'APP_PASSWORD'),
@@ -156,7 +156,7 @@ pipeline {
         stage('Stage - Smoke Tests') {
             when { expression { params.ENVIRONMENT in ['stage', 'prod'] } }
             steps {
-                sh 'mkdir -p reports-stage/html allure-results-stage'
+                sh 'rm -rf allure-results-stage && mkdir -p reports-stage/html allure-results-stage'
                 withCredentials([
                     usernamePassword(credentialsId: 'app-stage-credentials',
                         usernameVariable: 'APP_USERNAME', passwordVariable: 'APP_PASSWORD'),
@@ -215,7 +215,7 @@ pipeline {
         stage('Prod - Smoke Tests') {
             when { expression { params.ENVIRONMENT == 'prod' } }
             steps {
-                sh 'mkdir -p reports-prod/html allure-results-prod'
+                sh 'rm -rf allure-results-prod && mkdir -p reports-prod/html allure-results-prod'
                 withCredentials([
                     usernamePassword(credentialsId: 'app-prod-credentials',
                         usernameVariable: 'APP_USERNAME', passwordVariable: 'APP_PASSWORD'),
