@@ -1,3 +1,4 @@
+<img width="2160" height="2700" alt="QE_Agentic_Playwright_LinkedIn" src="https://github.com/user-attachments/assets/c4a32acc-a962-433f-8734-0cb0ac5df241" />
 # QE Agentic Playwright — SauceDemo
 
 An AI-native Playwright TypeScript automation framework for [SauceDemo](https://www.saucedemo.com),
@@ -127,3 +128,6 @@ spec file, tag, and page-object/data work, then stopping for a second human appr
 | `qa`        | full suite |
 | `stage`     | `@smoke` only | --> can be changed based on tag
 | `prod`      | `@smoke` only | --> can be changed based on tag
+
+<img width="2160" height="2700" alt="QE_Agentic_Playwright_LinkedIn" src="https://github.com/user-attachments/assets/edf029f2-7d3a-4dde-bab8-cc03e25b46db" />
+
