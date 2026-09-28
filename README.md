@@ -1,8 +1,8 @@
 <img width="2160" height="2700" alt="QE_Agentic_Playwright_LinkedIn" src="https://github.com/user-attachments/assets/c4a32acc-a962-433f-8734-0cb0ac5df241" />
 
-# QE Agentic Playwright — SauceDemo
+# QE Agentic Playwright
 
-An AI-native Playwright TypeScript automation framework for [SauceDemo](https://www.saucedemo.com),
+An AI-native Playwright TypeScript automation framework,
 built around a Page Object Model, fixture-based dependency injection, and a library of
 Claude Code skills (`.claude/skills/`) that enforce consistent conventions and a human-approval
 gate before any test code is generated.
@@ -188,6 +188,6 @@ and an **approved implementation plan** — never an unreviewed agent guess.
 | ----------- | ---------- |
 | `dev`       | `@smoke` only |
 | `qa`        | full suite |
-| `stage`     | `@smoke` only | --> can be changed based on tag
-| `prod`      | `@smoke` only | --> can be changed based on tag
+| `stage`     | `@smoke` only --> can be changed based on tag | 
+| `prod`      | `@smoke` only --> can be changed based on tag |
 
