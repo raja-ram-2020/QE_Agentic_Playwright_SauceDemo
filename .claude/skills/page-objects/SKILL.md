@@ -1,7 +1,6 @@
 ---
 name: page-objects
 description: Page Object Model pattern for the Playwright scaffold — class structure, get-accessor locator pattern, action-method conventions, component composition, registration via the page-object fixture, and the mandatory exploration-first workflow. Use when creating a new page object, adding or updating locators on an existing page object, adding a new reusable component, or registering a page in the fixture layer. For the locator priority order and feedback/validation-message rules see the selectors skill; for the terminal-only live-app exploration tool see the playwright-cli skill; for the DI wiring see the fixtures skill; for UI message strings and endpoint enums see the enums skill.
-author: Ivan Davidov
 ---
 
 # Page Object Model

@@ -1,7 +1,6 @@
 ---
 name: helpers
 description: Plain utility function conventions for the Playwright scaffold — app-specific helpers in helpers/{area}/ (authentication bootstrap, storage-state creation, data seeding) and generic utilities in helpers/util/ (date formatting, string manipulation, parsing). Use when adding a reusable function that does NOT need the Playwright fixture lifecycle, wiring authentication bootstrap in tests/{area}/auth.setup.ts, or deciding whether a reusable piece of code belongs in helpers/ or fixtures/. For Playwright fixtures with setup/use/teardown lifecycle use the fixtures skill; for the apiRequest-vs-helper-fixture-vs-factory decision when the helper makes API calls see the api-testing skill (Phase 8); for the env and enum sources of truth see the config and enums skills.
-author: Ivan Davidov
 ---
 
 # Helpers

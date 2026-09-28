@@ -1,7 +1,6 @@
 ---
 name: api-testing
 description: API testing patterns for Playwright -- apiRequest fixture usage, Zod response schema creation and validation, test.step wrapping for multi-call tests, per-field negative/validation testing, path parameter fuzzing, and helper fixtures for shared setup/teardown. Use when writing or updating API test specs, adding tests for a new endpoint, creating Zod schemas for responses, wiring apiRequest or helper fixtures, or investigating API behavior mismatches vs the OpenAPI spec. Do NOT use for UI selectors (use the page-objects or selectors skill) or for generic Playwright fixture authoring unrelated to API setup/teardown (use the fixtures skill).
-author: Ivan Davidov
 ---
 
 # API Testing

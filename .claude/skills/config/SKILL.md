@@ -1,7 +1,6 @@
 ---
 name: config
 description: Configuration and environment variable conventions for the Playwright scaffold — env file layout (env/.env.*), dotenv loading via playwright.config.ts and the ENVIRONMENT variable, config objects in config/app.ts and config/util/util.ts, and the rules for adding new env-driven values. Use when adding a new environment variable, a new config property, a new environment file, a new utility-service URL, or when a test/fixture needs to consume APP_URL / API_URL / APP_EMAIL / APP_PASSWORD / UTILITY_URL. This skill owns URLs, credentials, and env-driven settings — for endpoint paths and route constants use the enums skill, and for process.env.* typing (non-null assertion vs fallback) use the type-safety skill.
-author: Ivan Davidov
 ---
 
 # Configuration

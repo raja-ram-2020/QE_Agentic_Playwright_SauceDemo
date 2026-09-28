@@ -1,7 +1,6 @@
 ---
 name: enums
 description: TypeScript enum conventions for the Playwright scaffold — PascalCase enum names, SCREAMING_SNAKE_CASE members, location rules for app-specific (enums/{area}/) vs shared/utility (enums/util/) constants, and the rules for adding or extending enums. Use when adding a new API endpoint path, UI message, role, storage-state path, route, or any repeated string constant defined by the application; when deciding whether a new value belongs in enums/, config/, or test-data/static/; or when extending an existing enum. For URLs and credentials use the config skill, for curated test input data use the data-strategy skill, and for editing existing enum values use the refactor-values skill.
-author: Ivan Davidov
 ---
 
 # Enums

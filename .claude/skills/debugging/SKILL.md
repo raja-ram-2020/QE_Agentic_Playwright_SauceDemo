@@ -1,7 +1,6 @@
 ---
 name: debugging
 description: Playwright test debugging conventions for the scaffold — reading failure messages, classifying failure modes (TimeoutError, ZodError, strict-mode violation, locator not found, network errors, schema drift), the playwright.config.ts capture defaults (trace on-first-retry, screenshot only-on-failure, video retain-on-failure), the right tool per failure (UI Mode / Trace Viewer / Inspector / headed), the npm-script entry points (test:ui, test:debug, test:headed, report), reproducing locally, fixing without suppressing, and pulling CI artifacts to replay a CI-only failure locally. Use whenever a Playwright test fails or behaves unexpectedly, when triaging a flaky test, when investigating a `ZodError` from `Schema.parse(body)`, when a CI run is red but local is green, or when an action / assertion / navigation times out.
-author: Ivan Davidov
 ---
 
 # Debugging

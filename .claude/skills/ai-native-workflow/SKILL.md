@@ -1,7 +1,6 @@
 ---
 name: ai-native-workflow
 description: Sole entry-point router for AI-assisted work on this Playwright scaffold — owns the 8-phase main workflow (classify → route → explore → plan+confidence → human gate → apply → verify → report), the human↔agent conversation contract, the routing matrix that picks the right specialized skill, and the confidence-gate format that every non-trivial proposal must include. Use whenever a user starts a non-trivial task ("add tests for X", "create a page object", "rename this enum", "debug this failure", "refactor Y"), when onboarding to AI-assisted development on this scaffold, when planning a multi-step change that chains across several skills, or when the user asks "how should I work with AI here", "which skill for X?", "why is the agent doing Y?". This is the routing layer — load it first, then chain to the deep skill it points at.
-author: Ivan Davidov
 ---
 
 # AI-Native Workflow

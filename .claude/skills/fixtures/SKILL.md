@@ -1,7 +1,6 @@
 ---
 name: fixtures
 description: Playwright fixture conventions for the Playwright scaffold — dependency-injection pattern, the single import point from fixtures/pom/test-options.ts (merged via mergeTests), the three fixture categories (page objects in fixtures/pom/, API request in fixtures/api/, lifecycle setup/teardown in fixtures/helper/), and the workflow for adding a new fixture. Use when adding a new page object fixture, registering a new fixture category, extending FrameworkFixtures or HelperFixtures, or deciding whether a reusable piece of code should be a Playwright fixture. For plain (non-fixture) utility functions used from tests or fixtures use the helpers skill; for the deep decision on when to promote API setup into a helper fixture vs calling apiRequest directly see the api-testing skill (Phase 8).
-author: Ivan Davidov
 ---
 
 # Fixtures and Dependency Injection

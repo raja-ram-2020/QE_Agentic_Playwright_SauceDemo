@@ -1,7 +1,6 @@
 ---
 name: refactor-values
 description: Safe refactoring workflow for enum values, enum keys, and static test data in test-data/static/*.ts — mandatory impact analysis, cascading updates, and verification. Use BEFORE changing any enum member's string value (ApiEndpoints.*, Messages.*, Roles, StorageStatePaths), renaming any enum key, or editing any existing file under test-data/static/. Running this workflow prevents silent test failures, TypeScript errors from stale imports, and assertion drift from hardcoded strings that bypass the enum. For defining NEW enums see the enums skill; for adding NEW static data see the data-strategy skill (three-tier rule).
-author: Ivan Davidov
 ---
 
 # Refactoring Enum Values and Static Test Data

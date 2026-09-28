@@ -1,7 +1,6 @@
 ---
 name: common-tasks
 description: Copy-paste AI prompt templates for common Playwright scaffold development tasks — adding page objects, functional/E2E/API tests, Zod schemas, factories, fixtures, and components. Use when the user asks "how do I add a ...", "give me a prompt for ...", "create a new [page object | test | schema | factory | fixture | component]", or when bootstrapping a new scaffold artifact and wanting a standardized starting prompt. This skill is a routing layer; for the deep rules of each task category load the matching skill directly — page-objects / selectors / playwright-cli for UI locators, api-testing for API tests and schemas, fixtures / helpers for fixtures, data-strategy for factories and static data, test-standards for test structure and tags, type-safety for TypeScript + Zod, enums for endpoint enums.
-author: Ivan Davidov
 ---
 
 # AI Prompt Templates for Agentic Playwright

@@ -1,7 +1,6 @@
 ---
 name: pr-reviewer
 description: Reviews a Git branch as a pull request against the base branch (auto-resolved from origin/HEAD — usually main or master) using this repo's own rules — the CLAUDE.md constitution and the .claude/skills/ that apply to the changed files. Fetches the branch, switches to it, diffs it against the merge-base, routes the changed files to every applicable skill, verifies (eslint + prettier + tsc, and attempts the affected tests), then reports tiered findings with a confidence score. After reporting it OPTIONALLY offers to implement fixes for the findings, and only if fixes are applied does it ask permission to commit. Use this whenever the user names a branch alongside any review intent — "review PR for branch X", "PR review on aex-1234-foo against master", "review the diffs on branch Y", "check / audit the changes on branch Z", "is branch W good to merge". Use it even when the user says "PR" without the word "review", or "review" without "PR", as long as a branch is in play. Do NOT use this for reviewing the current uncommitted working-tree diff (that is /code-review's job) or for authoring brand-new tests/page objects from scratch (route to common-tasks / api-testing / page-objects instead).
-author: Ivan Davidov
 ---
 
 # PR Reviewer

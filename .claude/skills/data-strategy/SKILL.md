@@ -1,7 +1,6 @@
 ---
 name: data-strategy
 description: Test data strategy for the Playwright scaffold — Faker + Zod factories for dynamic happy-path data, static TS files (`.ts` with `as const` exports — never `.json`) for domain-specific curated invalid sets, and the universal type-mismatch arrays in test-data/static/util/invalid-values.ts. Use when creating or editing a data factory, adding a new invalid-values dataset, deciding between factory / static / inline / enum for a new test value, writing data-driven tests, or updating existing static data. For the API negative-testing patterns that consume this data see the api-testing skill (Phase 6, three-tier rule); for safe edits to existing static values see the refactor-values skill; for Zod 4 validator rules see the type-safety skill.
-author: Ivan Davidov
 ---
 
 # Data Strategy

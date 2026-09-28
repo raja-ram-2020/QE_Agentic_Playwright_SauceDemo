@@ -1,7 +1,6 @@
 ---
 name: type-safety
 description: TypeScript type safety conventions for the Playwright scaffold — the "no any" rule, Zod 4 schema patterns (z.strictObject, top-level validators like z.uuid / z.email / z.url / z.int / z.enum), schemas built directly from the documented OpenAPI / Swagger contract (response envelope spelled out per endpoint), type inference via zOutput and zInput, the mandatory expect(Schema.parse(body)).toBeTruthy() assertion for API responses, explicit return types on exported functions, and the two sanctioned patterns for process.env.* (non-null assertion ! vs ?? fallback). Use when creating or extending a Zod schema, inferring a TypeScript type from a schema, writing type annotations on function signatures, reviewing code for any / unsafe casts, or deciding between ! and ?? on a process.env.* access. For env-variable definitions (where APP_URL etc. are declared) see the config skill; for the full API test coverage matrix and how schemas are consumed in tests see the api-testing skill.
-author: Ivan Davidov
 ---
 
 # Type Safety

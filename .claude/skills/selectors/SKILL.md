@@ -1,7 +1,6 @@
 ---
 name: selectors
 description: Selector strategy, exploration-first workflow, locator priority order (getByRole then getByLabel then getByPlaceholder then getByText then getByTestId), and feedback/validation-message selector rules for Playwright page objects. Use when creating page objects, writing or updating locators, generating UI tests, or deciding which selector strategy to use for a given element. Enforces mandatory live-app exploration via playwright-cli before any selector generation. For the page-object class structure, JSDoc rules, and fixture registration see the page-objects skill; for the exploration tool itself see the playwright-cli skill; for UI message strings used inside getByText see the enums skill.
-author: Ivan Davidov
 ---
 
 # Selector Strategy
