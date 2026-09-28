@@ -7,7 +7,7 @@
 ARG PLAYWRIGHT_VERSION=1.60.0
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble
 
-LABEL maintainer="Ivan Davidov"
+LABEL maintainer="Rajaram Manoharan"
 LABEL description="Playwright + Python + Claude Code development container"
 
 # Prevent interactive prompts during package installation
