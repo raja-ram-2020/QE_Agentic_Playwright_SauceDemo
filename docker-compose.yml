@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  tests-qa:
+    build: .
+    env_file:
+      - env/.env.qa
+    environment:
+      - CI=true
+    volumes:
+      - ./allure-results-qa:/app/allure-results
+      - ./allure-report-qa:/app/allure-report
+    command: >
+      sh -c "npx playwright test --project=chromium;
+             code=$$?;
+             npx allure generate allure-results --clean -o allure-report;
+             exit $$code"
+
+  tests-dev:
+    build: .
+    env_file:
+      - env/.env.dev
+    environment:
+      - CI=true
+    volumes:
+      - ./allure-results-dev:/app/allure-results
+      - ./allure-report-dev:/app/allure-report
+    command: >
+      sh -c "npx playwright test --project=chromium --grep @smoke;
+             code=$$?;
+             npx allure generate allure-results --clean -o allure-report;
+             exit $$code"

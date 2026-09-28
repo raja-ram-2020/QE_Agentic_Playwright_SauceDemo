@@ -1,0 +1,12 @@
+node_modules
+.git
+.DS_Store
+
+env/.env.*
+!env/.env.example
+
+.auth
+allure-results
+allure-report
+playwright-report
+test-results

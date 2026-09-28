@@ -18,3 +18,8 @@ playwright/.cache/
 #Report artifacts
 allure-results/
 allure-report/
+
+# Docker per-environment report/result folders (Jenkinsfile, docker-compose.yml)
+reports-*/
+allure-results-*/
+allure-report-*/

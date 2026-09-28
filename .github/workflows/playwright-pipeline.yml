@@ -1,0 +1,404 @@
+name: Playwright Test Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Run up to environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - qa
+          - stage
+          - prod
+
+jobs:
+  # Static checks against this repo (no separate app to build)
+  build:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+  # ---- Dev ----
+  deploy-dev:
+    name: Deploy to Dev
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Dev
+        run: echo "Deployed to Dev"
+
+  sanity-dev:
+    name: Dev - Smoke Tests
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment: dev
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        id: pw-cache-dev
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache-dev.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS dependencies only
+        if: steps.pw-cache-dev.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run smoke tests on Dev
+        run: npx playwright test --project=chromium --grep @smoke
+        env:
+          ENVIRONMENT: dev
+          APP_URL: ${{ secrets.APP_URL }}
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+
+      - name: Generate Allure report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Upload Dev Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-smoke-playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Dev Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-smoke-allure-report
+          path: allure-report/
+          retention-days: 30
+
+      - name: Publish Dev Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: dev
+          keep_files: true
+
+      - name: Add Allure report link to summary
+        if: always()
+        run: |
+          echo "### Allure Report (Dev)" >> "$GITHUB_STEP_SUMMARY"
+          echo "[View Report](https://raja-ram-2020.github.io/QE_Agentic_Playwright_SauceDemo/dev/)" >> "$GITHUB_STEP_SUMMARY"
+
+  # ---- QA ----
+  deploy-qa:
+    name: Deploy to QA
+    needs: sanity-dev
+    if: ${{ github.event.inputs.environment == 'qa' || github.event.inputs.environment == 'stage' || github.event.inputs.environment == 'prod' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to QA
+        run: echo "Deployed to QA"
+
+  regression-qa:
+    name: QA - Full Test Suite
+    needs: deploy-qa
+    runs-on: ubuntu-latest
+    environment: qa
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        id: pw-cache-qa
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache-qa.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS dependencies only
+        if: steps.pw-cache-qa.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run full test suite on QA
+        run: npx playwright test --project=chromium
+        env:
+          ENVIRONMENT: qa
+          APP_URL: ${{ secrets.APP_URL }}
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+
+      - name: Generate Allure report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Upload QA Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-regression-playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload QA Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-regression-allure-report
+          path: allure-report/
+          retention-days: 30
+
+      - name: Publish QA Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: qa
+          keep_files: true
+
+      - name: Add Allure report link to summary
+        if: always()
+        run: |
+          echo "### Allure Report (QA)" >> "$GITHUB_STEP_SUMMARY"
+          echo "[View Report](https://raja-ram-2020.github.io/QE_Agentic_Playwright_SauceDemo/qa/)" >> "$GITHUB_STEP_SUMMARY"
+
+  # ---- Stage ----
+  deploy-stage:
+    name: Deploy to Stage
+    needs: regression-qa
+    if: ${{ github.event.inputs.environment == 'stage' || github.event.inputs.environment == 'prod' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Stage
+        run: echo "Deployed to Stage"
+
+  sanity-stage:
+    name: Stage - Smoke Tests
+    needs: deploy-stage
+    runs-on: ubuntu-latest
+    environment: stage
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        id: pw-cache-stage
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache-stage.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS dependencies only
+        if: steps.pw-cache-stage.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run smoke tests on Stage
+        run: npx playwright test --project=chromium --grep @smoke
+        env:
+          ENVIRONMENT: stage
+          APP_URL: ${{ secrets.APP_URL }}
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+
+      - name: Generate Allure report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Upload Stage Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-smoke-playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Stage Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-smoke-allure-report
+          path: allure-report/
+          retention-days: 30
+
+      - name: Publish Stage Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: stage
+          keep_files: true
+
+      - name: Add Allure report link to summary
+        if: always()
+        run: |
+          echo "### Allure Report (Stage)" >> "$GITHUB_STEP_SUMMARY"
+          echo "[View Report](https://raja-ram-2020.github.io/QE_Agentic_Playwright_SauceDemo/stage/)" >> "$GITHUB_STEP_SUMMARY"
+
+  # ---- Prod ----
+  deploy-prod:
+    name: Deploy to Prod
+    needs: sanity-stage
+    if: ${{ github.event.inputs.environment == 'prod' }}
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Deploy to Prod
+        run: echo "Deployed to Prod"
+
+  smoke-prod:
+    name: Prod - Smoke Tests
+    needs: deploy-prod
+    runs-on: ubuntu-latest
+    environment: prod
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache Playwright browsers
+        id: pw-cache-prod
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache-prod.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS dependencies only
+        if: steps.pw-cache-prod.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run smoke tests on Prod
+        run: npx playwright test --project=chromium --grep @smoke
+        env:
+          ENVIRONMENT: prod
+          APP_URL: ${{ secrets.APP_URL }}
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+
+      - name: Generate Allure report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Upload Prod Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-smoke-playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload Prod Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-smoke-allure-report
+          path: allure-report/
+          retention-days: 30
+
+      - name: Publish Prod Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          destination_dir: prod
+          keep_files: true
+
+      - name: Add Allure report link to summary
+        if: always()
+        run: |
+          echo "### Allure Report (Prod)" >> "$GITHUB_STEP_SUMMARY"
+          echo "[View Report](https://raja-ram-2020.github.io/QE_Agentic_Playwright_SauceDemo/prod/)" >> "$GITHUB_STEP_SUMMARY"
+
+  # ---- Summary ----
+  summary:
+    name: Pipeline Summary
+    needs: [build, sanity-dev, regression-qa, sanity-stage, smoke-prod]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print summary
+        run: |
+          echo "Pipeline Summary"
+          echo "  Lint & Typecheck: ${{ needs.build.result }}"
+          echo "  Dev Smoke:        ${{ needs.sanity-dev.result }}"
+          echo "  QA Regression:    ${{ needs.regression-qa.result }}"
+          echo "  Stage Smoke:      ${{ needs.sanity-stage.result }}"
+          echo "  Prod Smoke:       ${{ needs.smoke-prod.result }}"

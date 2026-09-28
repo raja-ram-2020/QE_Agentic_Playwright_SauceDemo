@@ -7,7 +7,6 @@ export type FrameworkFixtures = {
     loginPage: LoginPage;
     inventoryPage: InventoryPage;
     cartPage: CartPage;
-    resetStorageState: () => Promise<void>;
 };
 
 export const test = base.extend<FrameworkFixtures>({
@@ -19,11 +18,5 @@ export const test = base.extend<FrameworkFixtures>({
     },
     cartPage: async ({ page }, use) => {
         await use(new CartPage(page));
-    },
-    resetStorageState: async ({ context }, use) => {
-        await use(async () => {
-            await context.clearCookies();
-            await context.clearPermissions();
-        });
     },
 });
